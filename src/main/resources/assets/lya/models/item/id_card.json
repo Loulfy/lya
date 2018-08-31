@@ -1,0 +1,20 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "lya:items/map_off"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "active": 0
+      },
+      "model": "lya:item/id_card_inactive"
+    },
+    {
+      "predicate": {
+        "active": 1
+      },
+      "model": "lya:item/id_card_active"
+    }
+  ]
+}

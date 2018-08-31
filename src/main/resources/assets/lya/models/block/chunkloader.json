@@ -1,0 +1,12 @@
+{
+  "parent": "block/cube",
+  "textures": {
+    "particle": "lya:blocks/face_neutre",
+    "down": "lya:blocks/face_neutre",
+    "up": "lya:blocks/face_neutre",
+    "east": "lya:blocks/face_neutre",
+    "west": "lya:blocks/face_neutre",
+    "north": "#front",
+    "south": "lya:blocks/face_neutre"
+  }
+}

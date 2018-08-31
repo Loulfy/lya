@@ -1,0 +1,6 @@
+itemGroup.lya=Loulfy's Addons
+
+tile.chunkloader.name=Chunkloader
+item.id_card.name=ID Card
+
+misc.lya:energy_stored=%d / %d FE

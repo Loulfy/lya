@@ -1,0 +1,208 @@
+package io.lylix.lya.chunkloader;
+
+import io.lylix.lya.LYA;
+import io.lylix.lya.util.LYAUtils;
+import mekanism.api.Coord4D;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.math.ChunkPos;
+import net.minecraftforge.common.ForgeChunkManager;
+import net.minecraftforge.common.ForgeChunkManager.Ticket;
+import net.minecraftforge.common.ForgeChunkManager.Type;
+import net.minecraftforge.common.util.Constants.NBT;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.relauncher.Side;
+
+import java.util.*;
+import java.util.stream.Collectors;
+
+public class ChunkLoader
+{
+    private TileEntity tileEntity;
+
+    private Ticket chunkTicket = null;
+
+    private Set<ChunkPos> chunkSet = new HashSet<>();
+
+    private Set<UUID> owner = new HashSet<>();
+    private Set<UUID> online = new HashSet<>();
+
+    public ChunkLoader(TileEntity tile)
+    {
+        tileEntity = tile;
+    }
+
+    public void setTicket(Ticket t)
+    {
+        if(chunkTicket != t && chunkTicket != null && chunkTicket.world == tileEntity.getWorld())
+        {
+            for(ChunkPos chunk : chunkTicket.getChunkList())
+            {
+                if(ForgeChunkManager.getPersistentChunksFor(tileEntity.getWorld()).keys().contains(chunk))
+                {
+                    LYA.logger.info("unforce chunks");
+                    ForgeChunkManager.unforceChunk(chunkTicket, chunk);
+                }
+            }
+
+            LYA.logger.info("release ticket");
+            ForgeChunkManager.releaseTicket(chunkTicket);
+        }
+
+        chunkTicket = t;
+    }
+
+    public void release()
+    {
+        setTicket(null);
+    }
+
+    public void sortChunks()
+    {
+        if(chunkTicket != null && canOperate() && IChunkLoader.class.cast(tileEntity).getState())
+        {
+            for(ChunkPos chunk : chunkTicket.getChunkList())
+            {
+                if(!chunkSet.contains(chunk))
+                {
+                    if(ForgeChunkManager.getPersistentChunksFor(tileEntity.getWorld()).keys().contains(chunk))
+                    {
+                        ForgeChunkManager.unforceChunk(chunkTicket, chunk);
+                        LYA.logger.info("update chunk : unforce {}", chunk);
+                    }
+                }
+            }
+
+            for(ChunkPos chunk : chunkSet)
+            {
+                if(!chunkTicket.getChunkList().contains(chunk))
+                {
+                    ForgeChunkManager.forceChunk(chunkTicket, chunk);
+                    LYA.logger.info("update chunk : force {}", chunk);
+                }
+            }
+        }
+    }
+
+    public void refreshChunkSet()
+    {
+        IChunkLoader loader = (IChunkLoader)tileEntity;
+
+        if(!chunkSet.equals(loader.getChunkSet()))
+        {
+            LYA.logger.info("Refresh chunk set");
+            chunkSet = loader.getChunkSet();
+            LYA.logger.info("Get {} Chunk", chunkSet.size());
+            sortChunks();
+        }
+    }
+
+    public void forceChunks(Ticket ticket)
+    {
+        setTicket(ticket);
+
+        LYA.logger.info("force chunks ({})", chunkSet.size());
+        for(ChunkPos chunk : chunkSet)
+        {
+            ForgeChunkManager.forceChunk(chunkTicket, chunk);
+        }
+    }
+
+    public void forceChunks()
+    {
+        LYA.logger.info("force chunks ({})", chunkSet.size());
+        for(ChunkPos chunk : chunkSet)
+        {
+            ForgeChunkManager.forceChunk(chunkTicket, chunk);
+        }
+    }
+
+    public void unforceChunks()
+    {
+        LYA.logger.info("unforce chunks ({})", chunkTicket.getChunkList().size());
+        for(ChunkPos chunk : chunkTicket.getChunkList())
+        {
+            ForgeChunkManager.unforceChunk(chunkTicket, chunk);
+        }
+    }
+
+    public boolean canOperate()
+    {
+        return online.size() > 0;
+    }
+
+    public void tick()
+    {
+        if(!tileEntity.getWorld().isRemote)
+        {
+            refreshChunkSet();
+
+            if(canOperate() && chunkTicket == null)
+            {
+                LYA.logger.info("create ticket");
+                Ticket ticket = ForgeChunkManager.requestTicket(LYA.instance, tileEntity.getWorld(), Type.NORMAL);
+
+                if(ticket != null)
+                {
+                    ticket.getModData().setInteger("x", tileEntity.getPos().getX());
+                    ticket.getModData().setInteger("y", tileEntity.getPos().getY());
+                    ticket.getModData().setInteger("z", tileEntity.getPos().getZ());
+                    ticket.getModData().setInteger("d", tileEntity.getWorld().provider.getDimension());
+
+                    setTicket(ticket);
+                }
+            }
+        }
+    }
+
+    public void invalidate()
+    {
+        if(!tileEntity.getWorld().isRemote)
+        {
+            release();
+        }
+    }
+
+    public void update()
+    {
+        IChunkLoader tile = IChunkLoader.class.cast(tileEntity);
+
+        LYA.logger.info("STATE:{}",tile.getState());
+        LYA.logger.info("OPERA:{}",canOperate());
+
+        if(tile.getState() && canOperate()) this.forceChunks();
+        else this.unforceChunks();
+    }
+
+    public boolean refreshPresence()
+    {
+        IChunkLoader tile = IChunkLoader.class.cast(tileEntity);
+        if(!owner.equals(tile.getPresences()) && FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER)
+        {
+            LYA.logger.info("refresh presence");
+            owner = tile.getPresences();
+            online = LYAUtils.getOnlinePlayerUUID().stream().filter(owner::contains).collect(Collectors.toSet());
+            return true;
+        }
+        return false;
+    }
+
+    public void login(EntityPlayer player)
+    {
+        online.add(player.getGameProfile().getId());
+        update();
+    }
+
+    public void logout(EntityPlayer player)
+    {
+        online.remove(player.getGameProfile().getId());
+        update();
+    }
+
+    public boolean contains(EntityPlayer player)
+    {
+        return owner.contains(player.getGameProfile().getId());
+    }
+}

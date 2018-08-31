@@ -1,0 +1,16 @@
+[
+{
+  "modid": "lya",
+  "name": "Loulfy's Addons",
+  "description": "Just little addons.",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["Loulfy"],
+  "credits": "Goju_Sulfam & Elkisab",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
