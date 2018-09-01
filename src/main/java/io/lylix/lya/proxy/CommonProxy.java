@@ -45,7 +45,7 @@ public class CommonProxy
     {
         manager = new ChunkManager();
         ForgeChunkManager.setForcedChunkLoadingCallback(LYA.instance, manager);
-        ForgeChunkManager.getConfig().getInt("maximumChunksPerTicket", LYA.ID, 50, 50,50, "");
+        ForgeChunkManager.getConfig().getInt("maximumChunksPerTicket", LYA.ID, 50, 50, 50, "");
 
         NetworkRegistry.INSTANCE.registerGuiHandler(LYA.instance, new GuiProxy());
         GameRegistry.registerTileEntity(TileChunk.class, "Chunkloader");

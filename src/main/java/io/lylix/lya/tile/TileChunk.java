@@ -53,7 +53,24 @@ public class TileChunk extends TileEntity implements ITickable, IChunkLoader
         }
     };
 
-    private Energy energy = new Energy(LYA.instance.config.capacity, LYA.instance.config.transfer);
+    private Energy energy = new Energy(LYA.instance.config.capacity, LYA.instance.config.transfer)
+    {
+        @Override
+        public int receiveEnergy(int maxReceive, boolean simulate)
+        {
+            int energy = super.receiveEnergy(maxReceive, simulate);
+            TileChunk.this.synchronise();
+            return energy;
+        }
+
+        @Override
+        public int extractEnergy(int maxExtract, boolean simulate)
+        {
+            int energy = super.extractEnergy(maxExtract, simulate);
+            TileChunk.this.synchronise();
+            return energy;
+        }
+    };
 
     private BitSet chunks;
     private ChunkLoader chunkloader;
@@ -216,6 +233,10 @@ public class TileChunk extends TileEntity implements ITickable, IChunkLoader
     {
         super.readFromNBT(compound);
         read(compound);
+
+        // Do not restart chunkloader
+        // TODO : enabled separated into two states
+        enabled = false;
     }
 
     @Override

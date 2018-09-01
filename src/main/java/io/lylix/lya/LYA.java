@@ -39,7 +39,7 @@ public class LYA
         @Override
         public ItemStack getTabIconItem()
         {
-            return new ItemStack(Item.getItemFromBlock(LYABlocks.CHUNK));
+            return new ItemStack(LYAItems.ID_CARD);
         }
     };
 
