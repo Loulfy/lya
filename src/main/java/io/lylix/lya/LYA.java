@@ -8,12 +8,14 @@ import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.event.FMLServerStoppedEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import org.apache.logging.log4j.Logger;
 
 import io.lylix.lya.proxy.CommonProxy;
+import io.lylix.lya.command.CommandChunk;
 
 @Mod(modid = LYA.ID, name = LYA.NAME, version = LYA.VERSION, dependencies = "after:mekanism;")
 public class LYA
@@ -63,5 +65,11 @@ public class LYA
     {
         LYA.logger.info("Cleaning up");
         proxy.clean();
+    }
+
+    @EventHandler
+    public static void onServerStarting(FMLServerStartingEvent event)
+    {
+        event.registerServerCommand(new CommandChunk());
     }
 }

@@ -2,18 +2,16 @@ package io.lylix.lya.chunkloader;
 
 import io.lylix.lya.LYA;
 import io.lylix.lya.util.LYAUtils;
-import mekanism.api.Coord4D;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.common.ForgeChunkManager.Ticket;
 import net.minecraftforge.common.ForgeChunkManager.Type;
-import net.minecraftforge.common.util.Constants.NBT;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
+import com.mojang.authlib.GameProfile;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -201,8 +199,19 @@ public class ChunkLoader
         update();
     }
 
-    public boolean contains(EntityPlayer player)
+    public boolean contains(GameProfile gp)
     {
-        return owner.contains(player.getGameProfile().getId());
+        return owner.contains(gp.getId());
+    }
+
+    public boolean contains(int dimension) { return tileEntity.getWorld().provider.getDimension() == dimension; }
+
+    @Override
+    public String toString()
+    {
+        BlockPos p = tileEntity.getPos();
+        boolean active = canOperate() && IChunkLoader.class.cast(tileEntity).getState();
+
+        return "Loader : {" + p.getX() + ", " + p.getY() + ", " + p.getZ() + "}; Chunks{" + chunkSet.size() + "}; Owners{" + owner.size() + "}; Active{" + active + "}";
     }
 }

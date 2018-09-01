@@ -4,7 +4,6 @@ import io.lylix.lya.LYA;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.ForgeChunkManager.LoadingCallback;
 import net.minecraftforge.common.ForgeChunkManager.Ticket;
 import net.minecraftforge.fml.common.Mod;
@@ -22,7 +21,7 @@ public class ChunkManager implements LoadingCallback
     @Override
     public void ticketsLoaded(List<Ticket> tickets, World world)
     {
-        LYA.logger.info(world.getProviderName());
+        LYA.logger.info(world.getWorldInfo().getWorldName());
         for(Ticket ticket : tickets)
         {
             ticket.setChunkListDepth(49);
@@ -79,18 +78,23 @@ public class ChunkManager implements LoadingCallback
     public static void onPlayerLogin(PlayerEvent.PlayerLoggedInEvent e)
     {
         LYA.logger.info("PLAYER LOGIN");
-        tiles.stream().filter(te -> te.getChunkLoader().contains(e.player)).forEach(te -> te.getChunkLoader().login(e.player));
+        tiles.stream().filter(te -> te.getChunkLoader().contains(e.player.getGameProfile())).forEach(te -> te.getChunkLoader().login(e.player));
     }
 
     @SubscribeEvent
     public static void onPlayerLogin(PlayerEvent.PlayerLoggedOutEvent e)
     {
         LYA.logger.info("PLAYER LOGOUT");
-        tiles.stream().filter(te -> te.getChunkLoader().contains(e.player)).forEach(te -> te.getChunkLoader().logout(e.player));
+        tiles.stream().filter(te -> te.getChunkLoader().contains(e.player.getGameProfile())).forEach(te -> te.getChunkLoader().logout(e.player));
     }
 
     public void clean()
     {
         tiles.clear();
+    }
+
+    public Set<IChunkLoader> getLoaders()
+    {
+        return tiles;
     }
 }

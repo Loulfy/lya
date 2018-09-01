@@ -62,6 +62,11 @@ public class CommonProxy
         return null;
     }
 
+    public ChunkManager getChunkManager()
+    {
+        return manager;
+    }
+
     @SubscribeEvent
     public void registerBlocks(RegistryEvent.Register<Block> e)
     {
