@@ -16,6 +16,12 @@ repositories {
 
     // JourneyMap API snapshots are here
     maven { url 'https://oss.sonatype.org/content/groups/public/' }
+
+    // Redstone Flux
+    maven {
+        name = "CoFH Maven"
+        url = "http://maven.covers1624.net"
+    }
 }
 
 
@@ -65,6 +71,7 @@ dependencies {
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
     compile fileTree(dir: 'libs', includes: ['*.jar'])
     deobfCompile group: "info.journeymap", name: "journeymap-api", version: "1.12-1.4", changing: true
+    deobfCompile "cofh:RedstoneFlux:1.12-2.0.2.3:universal"
 
 }
 

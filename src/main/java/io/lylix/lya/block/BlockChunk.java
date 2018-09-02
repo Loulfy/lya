@@ -2,9 +2,8 @@ package io.lylix.lya.block;
 
 import io.lylix.lya.LYA;
 import io.lylix.lya.tile.TileChunk;
-import io.lylix.lya.render.IModelRegister;
 import io.lylix.lya.item.itemblock.ItemBlockChunk;
-import net.minecraft.block.Block;
+import io.lylix.lya.render.IModelRegister;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.properties.PropertyDirection;
@@ -62,17 +61,6 @@ public class BlockChunk extends BlockBase implements ITileEntityProvider
         assert tile != null;
 
         tile.facing = placer.getHorizontalFacing().getOpposite();
-
-        if(!world.isRemote)
-        {
-            tile.getEnergy().setStored(ItemBlockChunk.getEnergyStored(stack));
-
-            if(ItemBlockChunk.hasItems(stack))
-            {
-                tile.getCards().deserializeNBT(ItemBlockChunk.getItemsStored(stack));
-                tile.getChunkLoader().refreshPresence();
-            }
-        }
     }
 
     @Nullable

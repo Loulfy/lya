@@ -17,7 +17,7 @@ import org.apache.logging.log4j.Logger;
 import io.lylix.lya.proxy.CommonProxy;
 import io.lylix.lya.command.CommandChunk;
 
-@Mod(modid = LYA.ID, name = LYA.NAME, version = LYA.VERSION, dependencies = "after:mekanism;")
+@Mod(modid = LYA.ID, name = LYA.NAME, version = LYA.VERSION, dependencies = "after:mekanism;after:redstoneflux;")
 public class LYA
 {
     public static final String ID = "lya";

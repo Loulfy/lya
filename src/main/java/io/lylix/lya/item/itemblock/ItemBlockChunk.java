@@ -1,137 +1,67 @@
 package io.lylix.lya.item.itemblock;
 
 import io.lylix.lya.LYA;
+import io.lylix.lya.integration.energy.ItemBlockEnergy;
 import io.lylix.lya.tile.TileChunk;
-import mekanism.api.energy.IEnergizedItem;
 import net.minecraft.block.Block;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.client.util.ITooltipFlag;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.common.Optional;
 
-import javax.annotation.Nullable;
-import java.util.List;
-
-@Optional.Interface(iface="mekanism.api.energy.IEnergizedItem", modid="mekanism")
-public class ItemBlockChunk extends ItemBlock implements IEnergizedItem
+public class ItemBlockChunk extends ItemBlockEnergy
 {
-    private static final String NBT_ENERGY = "energy";
-    private static final String NBT_ITEMS = "items";
-
-    private static final int CAPACITY = LYA.instance.config.capacity;
+    private static final String NBT_INVENTORY = "inventory";
 
     public ItemBlockChunk(Block block)
     {
-        super(block);
-        setMaxStackSize(1);
+        super(block, LYA.instance.config.capacity, LYA.instance.config.transfer);
     }
 
     @Override
-    public void onCreated(ItemStack stack, World worldIn, EntityPlayer playerIn)
+    public boolean placeBlockAt(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ, IBlockState state)
     {
-        super.onCreated(stack, worldIn, playerIn);
-        createStack(stack, new TileChunk());
-    }
+        boolean place = super.placeBlockAt(stack, player, world, pos, side, hitX, hitY, hitZ, state);
 
-    public static ItemStack createStack(ItemStack stack, TileChunk te)
-    {
-        NBTTagCompound tag = stack.getTagCompound();
-
-        if(tag == null)
+        if(place)
         {
-            tag = new NBTTagCompound();
+            TileChunk tile = TileChunk.class.cast(world.getTileEntity(pos));
+            if(tile != null)
+            {
+                tile.getEnergy().setStored(get(stack));
+                if(hasInventory(stack))
+                {
+                    tile.getInventory().deserializeNBT(getInventory(stack));
+                    tile.getChunkLoader().refreshPresence();
+                }
+            }
         }
 
-        tag.setInteger(NBT_ENERGY, te.getEnergy().getEnergyStored());
-        tag.setTag(NBT_ITEMS, te.getCards().serializeNBT());
-
-        stack.setTagCompound(tag);
-
-        return stack;
+        return place;
     }
 
-    public static int getEnergyStored(ItemStack stack)
+    public static void createStack(ItemStack stack, TileChunk tile)
     {
-        return (stack.hasTagCompound() && stack.getTagCompound().hasKey(NBT_ENERGY)) ? stack.getTagCompound().getInteger(NBT_ENERGY) : 0;
+        set(stack, tile.getEnergy().getEnergyStored());
+        setInventory(stack, tile.getInventory().serializeNBT());
     }
 
-    public static NBTTagCompound getItemsStored(ItemStack stack)
+    public static void setInventory(ItemStack stack, NBTTagCompound tag)
     {
-        return (stack.hasTagCompound() && stack.getTagCompound().hasKey(NBT_ITEMS)) ? NBTTagCompound.class.cast(stack.getTagCompound().getTag(NBT_ITEMS)) : new NBTTagCompound();
+        getTagCompoundSafe(stack).setTag(NBT_INVENTORY, tag);
     }
 
-    public static boolean hasItems(ItemStack stack)
+    public static NBTTagCompound getInventory(ItemStack stack)
     {
-        return stack.hasTagCompound() && stack.getTagCompound().hasKey(NBT_ITEMS);
+        NBTTagCompound tag = getTagCompoundSafe(stack);
+        return tag.hasKey(NBT_INVENTORY) ? NBTTagCompound.class.cast(tag.getTag(NBT_INVENTORY)) : new NBTTagCompound();
     }
 
-    @Override
-    public double getDurabilityForDisplay(ItemStack stack)
+    public static boolean hasInventory(ItemStack stack)
     {
-        return 1D - ((double) getEnergyStored(stack) / (double) CAPACITY);
-    }
-
-    @Override
-    public int getRGBDurabilityForDisplay(ItemStack stack)
-    {
-        return MathHelper.hsvToRGB(Math.max(0.0F, (float) getEnergyStored(stack) / (float) CAPACITY) / 3.0F, 1.0F, 1.0F);
-    }
-
-    @Override
-    public boolean showDurabilityBar(ItemStack stack)
-    {
-        return true;
-    }
-
-    @Override
-    public void addInformation(ItemStack stack, @Nullable World world, List<String> tooltip, ITooltipFlag flag)
-    {
-        super.addInformation(stack, world, tooltip, flag);
-        tooltip.add(I18n.format("misc.lya:energy_stored", getEnergyStored(stack), CAPACITY));
-    }
-
-    @Override
-    public double getEnergy(ItemStack stack) {
-        return getEnergyStored(stack);
-    }
-
-    @Override
-    public void setEnergy(ItemStack stack, double energy)
-    {
-        NBTTagCompound tag = stack.getTagCompound();
-
-        if(tag == null)
-        {
-            tag = new NBTTagCompound();
-        }
-
-        tag.setInteger(NBT_ENERGY, (int) energy);
-
-        stack.setTagCompound(tag);
-    }
-
-    @Override
-    public double getMaxEnergy(ItemStack stack) {
-        return CAPACITY;
-    }
-
-    @Override
-    public double getMaxTransfer(ItemStack stack) {
-        return 40000;
-    }
-
-    @Override
-    public boolean canReceive(ItemStack stack) {
-        return true;
-    }
-
-    @Override
-    public boolean canSend(ItemStack stack) {
-        return false;
+        return getTagCompoundSafe(stack).hasKey(NBT_INVENTORY);
     }
 }

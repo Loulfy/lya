@@ -2,6 +2,7 @@ package io.lylix.lya.tile;
 
 import io.lylix.lya.LYA;
 import io.lylix.lya.LYAItems;
+import io.lylix.lya.block.BlockChunk;
 import io.lylix.lya.util.Energy;
 import io.lylix.lya.item.ItemIdCard;
 import io.lylix.lya.render.Renderer;
@@ -293,7 +294,7 @@ public class TileChunk extends TileEntity implements ITickable, IChunkLoader
         super.invalidate();
     }
 
-    public ItemStackHandler getCards()
+    public ItemStackHandler getInventory()
     {
         return cards;
     }
