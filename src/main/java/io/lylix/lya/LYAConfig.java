@@ -1,6 +1,7 @@
 package io.lylix.lya;
 
 import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
 import java.io.File;
 
@@ -10,15 +11,22 @@ public class LYAConfig
     public int capacity = 10000000;
     public int transfer = 40000;
 
+    public double JOULES = 2.5;
+
     private final static String CHUNKLOADER = "chunkloader";
 
     private Configuration cfg;
+    private File dir;
 
-    public LYAConfig(File file)
+    public LYAConfig(FMLPreInitializationEvent e)
     {
-        cfg = new Configuration(file);
+        dir = e.getModConfigurationDirectory();
+        cfg = new Configuration(e.getSuggestedConfigurationFile());
 
         loadConfig();
+
+        // Hook Mekanism Config : "JoulesToForge"
+        JOULES = getModConfig("mekanism").get("general", "JoulesToForge", JOULES).getDouble();
     }
 
     public void loadConfig()
@@ -31,5 +39,12 @@ public class LYAConfig
 
 
         if(cfg.hasChanged()) cfg.save();
+    }
+
+    private Configuration getModConfig(String modid)
+    {
+        Configuration cfg =  new Configuration(dir, modid+".cfg");
+        cfg.load();
+        return cfg;
     }
 }

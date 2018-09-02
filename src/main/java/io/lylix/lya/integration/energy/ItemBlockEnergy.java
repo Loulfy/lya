@@ -1,5 +1,6 @@
 package io.lylix.lya.integration.energy;
 
+import io.lylix.lya.LYA;
 import mekanism.api.energy.IEnergizedItem;
 import cofh.redstoneflux.api.IEnergyContainerItem;
 import net.minecraft.block.Block;
@@ -25,7 +26,7 @@ public class ItemBlockEnergy extends ItemBlock implements IEnergizedItem, IEnerg
     private int maxReceive;
     private int maxExtract;
 
-    public ItemBlockEnergy(Block block, int capacity, int maxTransfer) { this(block, capacity, maxTransfer, 0); }
+    public ItemBlockEnergy(Block block, int capacity, int maxTransfer) { this(block, capacity, maxTransfer, maxTransfer); }
 
     public ItemBlockEnergy(Block block, int capacity, int maxReceive, int maxExtract)
     {
@@ -90,25 +91,25 @@ public class ItemBlockEnergy extends ItemBlock implements IEnergizedItem, IEnerg
     @Override
     public double getEnergy(ItemStack stack)
     {
-        return get(stack);
+        return get(stack)*LYA.instance.config.JOULES;
     }
 
     @Override
     public void setEnergy(ItemStack stack, double energy)
     {
-        set(stack, (int) energy);
+        set(stack, (int) (energy/LYA.instance.config.JOULES));
     }
 
     @Override
     public double getMaxEnergy(ItemStack stack)
     {
-        return capacity;
+        return capacity*LYA.instance.config.JOULES;
     }
 
     @Override
     public double getMaxTransfer(ItemStack stack)
     {
-        return maxReceive;
+        return maxReceive*LYA.instance.config.JOULES;
     }
 
     @Override

@@ -49,7 +49,7 @@ public class LYA
     public void preInit(FMLPreInitializationEvent event)
     {
         logger = event.getModLog();
-        config = new LYAConfig(event.getSuggestedConfigurationFile());
+        config = new LYAConfig(event);
         proxy.preInit(event);
     }
 
