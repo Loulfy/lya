@@ -1,0 +1,40 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "model": "lya:machine",
+    "textures": {
+      "sides": "lya:blocks/heater_block",
+      "front": "lya:blocks/heater_front"
+    }
+  },
+  "variants": {
+    "normal": [
+      {}
+    ],
+    "facing": {
+      "up": {},
+      "down": {},
+      "north": {},
+      "south": {
+        "y": 180
+      },
+      "east": {
+        "y": 90
+      },
+      "west": {
+        "y": -90
+      }
+    },
+    "active": {
+      "true": {
+        "textures": {
+          "front": "lya:blocks/heater_front_on"
+        }
+      },
+      "false": {}
+    },
+    "inventory": [
+      {}
+    ]
+  }
+}

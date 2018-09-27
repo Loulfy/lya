@@ -28,7 +28,7 @@ public abstract class Button extends GuiButton
 
         hovered = gui.inBounds(x, y, width, height, mouseX, mouseY);
 
-        gui.bindTexture("buttons.png");
+        gui.bindTexture("textures/gui/buttons.png");
         gui.drawTexture(x, y, 0, hovered ? 10 : 0, WIDTH, HEIGHT);
 
         drawButtonIcon(x, y);

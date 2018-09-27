@@ -1,0 +1,25 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "STS",
+    "TBT",
+    "STS"
+  ],
+  "key": {
+    "B": {
+      "item": "minecraft:bucket"
+    },
+    "S": {
+      "ore": "ingotSteel",
+      "type": "forge:ore_dict"
+    },
+    "T": {
+      "ore": "ingotCopper",
+      "type": "forge:ore_dict"
+    }
+  },
+  "result": {
+    "item": "lya:heater",
+    "data": 0
+  }
+}

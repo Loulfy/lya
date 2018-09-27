@@ -1,9 +1,12 @@
 package io.lylix.lya.proxy;
 
 import io.lylix.lya.LYA;
+import io.lylix.lya.container.ContainerHeater;
 import io.lylix.lya.gui.GuiChunk;
+import io.lylix.lya.gui.GuiHeater;
 import io.lylix.lya.tile.TileChunk;
 import io.lylix.lya.container.ContainerChunk;
+import io.lylix.lya.tile.TileHeater;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
@@ -25,6 +28,11 @@ public class GuiProxy implements IGuiHandler
             TileChunk tile = TileChunk.class.cast(te);
             return new ContainerChunk(player.inventory, tile);
         }
+        if(te instanceof TileHeater)
+        {
+            TileHeater tile = TileHeater.class.cast(te);
+            return new ContainerHeater(player.inventory, tile);
+        }
 
         return null;
     }
@@ -39,6 +47,11 @@ public class GuiProxy implements IGuiHandler
             TileChunk tile = TileChunk.class.cast(te);
             LYA.logger.info("OPEN GUI CHUNK");
             return new GuiChunk(new ContainerChunk(player.inventory, tile), tile);
+        }
+        if(te instanceof TileHeater)
+        {
+            TileHeater tile = TileHeater.class.cast(te);
+            return new GuiHeater(new ContainerHeater(player.inventory, tile), tile);
         }
         return null;
     }

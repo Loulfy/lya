@@ -14,10 +14,10 @@ import io.lylix.lya.container.ContainerChunk;
 
 import java.io.IOException;
 
-public class GuiChunk extends GuiContainer
+public class GuiChunk extends GuiBase
 {
-    public static final int WIDTH = 210;//180
-    public static final int HEIGHT = 194;//152
+    private static final int WIDTH = 210;//180
+    private static final int HEIGHT = 194;//152
 
     private static final ResourceLocation background = new ResourceLocation(LYA.ID, "textures/gui/guichunk.png");
 
@@ -26,10 +26,8 @@ public class GuiChunk extends GuiContainer
     public GuiChunk(ContainerChunk container, TileChunk tile)
     {
         super(container);
-
         xSize = WIDTH;
         ySize = HEIGHT;
-
         this.tile = tile;
     }
 
@@ -57,36 +55,20 @@ public class GuiChunk extends GuiContainer
     }
 
     @Override
-    protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY)
+    public void drawBackground()
     {
-        mc.getTextureManager().bindTexture(background);
-        drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
+        bindTexture("textures/gui/guichunk.png");
+        drawTexture(guiLeft, guiTop, 0, 0, xSize, ySize);
     }
 
     @Override
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
     {
-        GlStateManager.disableLighting();
-        drawString(fontRenderer, "Chunk Loader", (175/2)-(fontRenderer.getStringWidth("Chunk Loader")/2), 4, 0xffffff);
-        //drawString(fontRenderer, ""+tile.getEnergyUsage()*100, xSize-100, 10, 0x404040);
-        drawString(fontRenderer, "Inventory", 7, 100, 0xffffff);
+        fontRenderer.drawString("Chunk Loader", (175/2)-(fontRenderer.getStringWidth("Chunk Loader")/2), 4, 0x404040);
+        fontRenderer.drawString("Inventory", 7, 100, 0x404040);
         int per = (tile.getEnergy().getEnergyStored()*100)/tile.getEnergy().getMaxEnergyStored();
-        drawString(fontRenderer, per+"%", 140, 20, 0xffffff);
-        GlStateManager.enableLighting();
-    }
-
-    @Override
-    public void drawScreen(int mouseX, int mouseY, float partialTicks)
-    {
-        super.drawDefaultBackground();
-        super.drawScreen(mouseX, mouseY, partialTicks);
-        super.renderHoveredToolTip(mouseX, mouseY);
-    }
-
-    @Override
-    public boolean doesGuiPauseGame()
-    {
-        return false;
+        fontRenderer.drawString(per+"%", 140, 30, 0x404040);
+        fontRenderer.drawString(getConsumptionDisplay(), 80, 100, 0x404040);
     }
 
     @Override
@@ -111,31 +93,9 @@ public class GuiChunk extends GuiContainer
         return tile;
     }
 
-    public boolean inBounds(int x, int y, int w, int h, int ox, int oy)
+    private String getConsumptionDisplay()
     {
-        return ox >= x && ox <= x + w && oy >= y && oy <= y + h;
+        return (tile.enabled ? tile.getEnergyUsage() : 0)+" FE/t";
     }
 
-    public void bindTexture(String file)
-    {
-        bindTexture(LYA.ID, file);
-    }
-
-    public void bindTexture(String base, String file)
-    {
-        String id = base + ":" + file;
-
-        /*if (!TEXTURE_CACHE.containsKey(id)) {
-            TEXTURE_CACHE.put(id, new ResourceLocation(base, "textures/" + file));
-        }*/
-
-        ResourceLocation rc = new ResourceLocation(base, "textures/gui/"+file);
-
-        mc.getTextureManager().bindTexture(rc);
-    }
-
-    public void drawTexture(int x, int y, int textureX, int textureY, int width, int height)
-    {
-        drawTexturedModalRect(x, y, textureX, textureY, width, height);
-    }
 }

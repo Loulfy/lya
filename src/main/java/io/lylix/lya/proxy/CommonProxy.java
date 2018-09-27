@@ -8,11 +8,13 @@ import io.lylix.lya.tile.TileChunk;
 import io.lylix.lya.block.BlockBase;
 import io.lylix.lya.render.Renderer;
 import io.lylix.lya.chunkloader.ChunkManager;
+import io.lylix.lya.tile.TileHeater;
 import net.minecraft.item.Item;
 import net.minecraft.block.Block;
 import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -39,6 +41,8 @@ public class CommonProxy
 
         registerBlock(LYABlocks.CHUNK, "chunkloader");
         registerItem(LYAItems.ID_CARD, "id_card");
+
+        if(Loader.isModLoaded("mekanism")) registerBlock(LYABlocks.HEATER, "heater");
     }
 
     public void init(FMLInitializationEvent e)
@@ -49,6 +53,8 @@ public class CommonProxy
 
         NetworkRegistry.INSTANCE.registerGuiHandler(LYA.instance, new GuiProxy());
         GameRegistry.registerTileEntity(TileChunk.class, "Chunkloader");
+
+        if(Loader.isModLoaded("mekanism")) GameRegistry.registerTileEntity(TileHeater.class, "Heater");
     }
 
     public void postInit(FMLPostInitializationEvent e)

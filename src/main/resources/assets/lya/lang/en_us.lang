@@ -1,6 +1,7 @@
 itemGroup.lya=Loulfy's Addons
 
 tile.chunkloader.name=Chunkloader
+tile.heater.name=Liquid Fueled Heater
 item.id_card.name=ID Card
 
 misc.lya:energy_stored=%d / %d FE
