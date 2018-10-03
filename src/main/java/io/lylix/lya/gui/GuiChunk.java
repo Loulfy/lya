@@ -4,13 +4,11 @@ import io.lylix.lya.LYA;
 import io.lylix.lya.gui.widget.Button;
 import io.lylix.lya.gui.widget.Check;
 import io.lylix.lya.network.MessageChunkSync;
+import io.lylix.lya.container.ContainerChunk;
 import io.lylix.lya.tile.TileChunk;
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 
-import io.lylix.lya.container.ContainerChunk;
 
 import java.io.IOException;
 

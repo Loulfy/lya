@@ -87,6 +87,9 @@ public class TileChunk extends TileEntity implements ITickable, IChunkLoader
 
     public void setEnabled(boolean state)
     {
+        // Security
+        if(this.enabled == state) return;
+
         enabled = state;
         chunkloader.update();
         this.markDirty();

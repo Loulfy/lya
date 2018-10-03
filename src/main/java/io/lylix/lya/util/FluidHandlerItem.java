@@ -1,5 +1,6 @@
 package io.lylix.lya.util;
 
+import io.lylix.lya.LYA;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.fluids.FluidStack;
@@ -7,6 +8,7 @@ import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
+import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.ItemStackHandler;
 
@@ -31,7 +33,9 @@ public class FluidHandlerItem
             IFluidHandlerItem handler = FluidUtil.getFluidHandler(inputCopy);
             if (handler != null)
             {
-                clear(stack, handler);
+                // Can fill ?
+                stack = extract(handler, tank);
+                if(stack == null) return;
                 inputCopy = handler.getContainer();
             }
 
@@ -41,7 +45,7 @@ public class FluidHandlerItem
                 return;
             }
 
-            // Can fill ?
+            // Fill
             if(tank.fill(stack, false) == stack.amount) tank.fill(stack, true);
             else return;
 
@@ -64,6 +68,22 @@ public class FluidHandlerItem
     public static void clear(FluidStack fluid, IFluidHandler handler)
     {
         if(fluid != null && handler != null) handler.drain(fluid, true);
+    }
+
+    private static FluidStack extract(IFluidHandler src, IFluidHandler dst)
+    {
+        IFluidTankProperties[] isrc = src.getTankProperties();
+        IFluidTankProperties[] idst = dst.getTankProperties();
+        if(isrc.length == 1 && idst.length == 1)
+        {
+            FluidStack item = isrc[0].getContents();
+            FluidStack tank = idst[0].getContents();
+
+            int amount = idst[0].getCapacity();
+            if(tank != null) amount -= tank.amount;
+            if(item != null) return src.drain(amount, true);
+        }
+        return null;
     }
 
     public static ItemStack size(ItemStack stack, int size)

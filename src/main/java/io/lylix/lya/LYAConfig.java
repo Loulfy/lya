@@ -12,12 +12,15 @@ public class LYAConfig
     public int transfer = 40000;
 
     public int fuelPerTick = 10;
-    public int heatPerFuel = 10;
+    public int heatPerFuel = 100;
+
+    public String[] blacklist = {"net.minecraft.block.BlockGrass", "net.minecraft.block.BlockFarmland"};
 
     public double JOULES = 2.5;
 
     private final static String CHUNKLOADER = "chunkloader";
     private final static String HEATER = "heater";
+    private final static String LAGGOGGLES = "laggoggles";
 
     private Configuration cfg;
     private File dir;
@@ -46,12 +49,15 @@ public class LYAConfig
         fuelPerTick = cfg.getInt("fuelPerTick", HEATER, fuelPerTick, 1, 100, "Fuel burned per tick");
         heatPerFuel = cfg.getInt("heatPerFuel", HEATER, heatPerFuel, 1, 100, "Heat generated per fuel");
 
+        // laggoggles
+        blacklist = cfg.getStringList("blacklist", LAGGOGGLES, blacklist, "Classes blacklisted in the result scan of a chunk loader");
+
         if(cfg.hasChanged()) cfg.save();
     }
 
     private Configuration getModConfig(String modid)
     {
-        Configuration cfg =  new Configuration(dir, modid+".cfg");
+        Configuration cfg = new Configuration(new File(dir, modid+".cfg"));
         cfg.load();
         return cfg;
     }

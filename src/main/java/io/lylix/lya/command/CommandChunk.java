@@ -67,6 +67,9 @@ public class CommandChunk extends CommandBase
                 case "world":
                     if(checkSize(args, "world")) byWorld(args[1], checkPrint(args));
                     break;
+                /*case "result":
+                    if(checkSize(args, "result")) byResult(args[1], checkPrint(args));
+                    break;*/
                 default:
                     sender.sendMessage(new TextComponentString(tag + TextFormatting.RED + "Error unknown command!"));
                     break;
@@ -77,7 +80,7 @@ public class CommandChunk extends CommandBase
     @Override
     public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos targetPos)
     {
-        if(args.length == 1) return Arrays.asList("name", "world");
+        if(args.length == 1) return Arrays.asList("name", "world", "result");
         switch(args[0])
         {
             case "name":
@@ -159,4 +162,36 @@ public class CommandChunk extends CommandBase
         sender.sendMessage(new TextComponentString(builder.toString()));
         if(print) cache.forEach(this::print);
     }
+
+    /*private void byResult(String s, boolean print)
+    {
+        int limit;
+        try
+        {
+            limit = Integer.parseInt(s);
+        }
+        catch (NumberFormatException e)
+        {
+            sender.sendMessage(new TextComponentString(tag + TextFormatting.RED + "Error parsing limit!"));
+            return;
+        }
+
+        StringBuilder builder = new StringBuilder();
+
+        if(Loader.isModLoaded("laggoggles"))
+        {
+            List<ProfileResultHandler.ChunkTick> chunkTickList = ProfileResultHandler.pick(limit);
+            if(chunkTickList.isEmpty()) sender.sendMessage(new TextComponentString(tag + TextFormatting.RED + "Error no results!"));
+            for(ProfileResultHandler.ChunkTick ct : chunkTickList)
+            {
+                builder.append(tag).append(TextFormatting.GREEN);
+                builder.append("Chunkloader ").append(ct.chunk.stringifyPos());
+                builder.append(TextFormatting.WHITE).append(" = ").append(TextFormatting.RED);
+                builder.append(Calculations.muPerTickString(ct.nanos, ProfileResultHandler.getResult(ct.chunk)));
+                sender.sendMessage(new TextComponentString(builder.toString()));
+                builder.setLength(0);
+            }
+        }
+        else sender.sendMessage(new TextComponentString(tag + TextFormatting.RED + "Error mod LagGoggles is required!"));
+    }*/
 }

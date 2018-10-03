@@ -86,7 +86,7 @@ public class ChunkLoader
 
     public void refreshChunkSet()
     {
-        IChunkLoader loader = (IChunkLoader)tileEntity;
+        IChunkLoader loader = IChunkLoader.class.cast(tileEntity);
 
         if(!chunkSet.equals(loader.getChunkSet()))
         {
@@ -137,7 +137,7 @@ public class ChunkLoader
         {
             refreshChunkSet();
 
-            if(canOperate() && chunkTicket == null)
+            if(chunkTicket == null)
             {
                 LYA.logger.info("create ticket");
                 Ticket ticket = ForgeChunkManager.requestTicket(LYA.instance, tileEntity.getWorld(), Type.NORMAL);
@@ -206,12 +206,42 @@ public class ChunkLoader
 
     public boolean contains(int dimension) { return tileEntity.getWorld().provider.getDimension() == dimension; }
 
+    public boolean contains(ChunkPos pos, int dimension)
+    {
+        return contains(dimension) && chunkSet.contains(pos);
+    }
+
+    public String stringifyPos()
+    {
+        BlockPos p = tileEntity.getPos();
+        return "{" + p.getX() + ", " + p.getY() + ", " + p.getZ() + "}";
+    }
+
     @Override
     public String toString()
     {
-        BlockPos p = tileEntity.getPos();
         boolean active = canOperate() && IChunkLoader.class.cast(tileEntity).getState();
 
-        return "Loader : {" + p.getX() + ", " + p.getY() + ", " + p.getZ() + "}; Chunks{" + chunkSet.size() + "}; Owners{" + owner.size() + "}; Active{" + active + "}";
+        return "Loader : " + stringifyPos() + "; Chunks{" + chunkSet.size() + "}; Owners{" + owner.size() + "}; Active{" + active + "}";
+    }
+
+    @Override
+    public int hashCode()
+    {
+        int hash = 1;
+        hash = hash * 17 + tileEntity.getPos().hashCode();
+        hash = hash * 31 + tileEntity.getWorld().provider.getDimension();
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object o)
+    {
+        if(o instanceof ChunkLoader)
+        {
+            ChunkLoader c = ChunkLoader.class.cast(o);
+            return c.tileEntity.getPos().equals(tileEntity.getPos()) && c.tileEntity.getWorld().provider.getDimension() == tileEntity.getWorld().provider.getDimension();
+        }
+        return false;
     }
 }

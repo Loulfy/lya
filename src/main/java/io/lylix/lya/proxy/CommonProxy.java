@@ -43,6 +43,7 @@ public class CommonProxy
         registerItem(LYAItems.ID_CARD, "id_card");
 
         if(Loader.isModLoaded("mekanism")) registerBlock(LYABlocks.HEATER, "heater");
+        //if(Loader.isModLoaded("laggoggles")) MinecraftForge.EVENT_BUS.register(new ProfileResultHandler());
     }
 
     public void init(FMLInitializationEvent e)
