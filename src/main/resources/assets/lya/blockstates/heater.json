@@ -25,7 +25,7 @@
         "y": -90
       }
     },
-    "active": {
+    "burning": {
       "true": {
         "textures": {
           "front": "lya:blocks/heater_front_on"

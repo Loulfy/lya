@@ -42,7 +42,6 @@ public abstract class ContainerBase extends Container
             ItemStack itemstack1 = slot.getStack();
             itemstack = itemstack1.copy();
 
-            LYA.logger.info(handler.getSlots());
             if(index < handler.getSlots())
             {
                 if(!this.mergeItemStack(itemstack1, handler.getSlots(), this.inventorySlots.size(), true))

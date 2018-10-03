@@ -4,6 +4,7 @@ import io.lylix.lya.LYA;
 import io.lylix.lya.render.IModelRegister;
 import io.lylix.lya.tile.TileHeater;
 import io.lylix.lya.util.LYAUtils;
+import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.properties.PropertyDirection;
@@ -12,33 +13,27 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.InventoryBasic;
-import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.items.CapabilityItemHandler;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.ItemHandlerHelper;
 
 import javax.annotation.Nullable;
 
 public class BlockHeater extends BlockBase implements ITileEntityProvider
 {
     private static final PropertyDirection FACING = PropertyDirection.create("facing");
-    private static final PropertyBool ENABLED = PropertyBool.create("active");
+    private static final PropertyBool BURNING = PropertyBool.create("burning");
 
     public BlockHeater()
     {
-        setDefaultState(blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH).withProperty(ENABLED, false));
+        setDefaultState(blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH).withProperty(BURNING, false));
     }
 
     @SideOnly(Side.CLIENT)
@@ -50,7 +45,7 @@ public class BlockHeater extends BlockBase implements ITileEntityProvider
     @Override
     public BlockStateContainer createBlockState()
     {
-        return new BlockStateContainer(this, FACING, ENABLED);
+        return new BlockStateContainer(this, FACING, BURNING);
     }
 
     @Override
@@ -95,7 +90,17 @@ public class BlockHeater extends BlockBase implements ITileEntityProvider
     {
         TileHeater tile = getTile(world, pos);
         if(tile == null) return state;
-        return state.withProperty(ENABLED, tile.active).withProperty(FACING, tile.facing);
+        return state.withProperty(BURNING, tile.isBurning()).withProperty(FACING, tile.facing);
+    }
+
+    @Override
+    @SuppressWarnings("deprecation")
+    public void neighborChanged(IBlockState state, World world, BlockPos pos, Block blockIn, BlockPos fromPos)
+    {
+        TileHeater tile = getTile(world, pos);
+        if(tile == null) return;
+        int powered = world.isBlockIndirectlyGettingPowered(pos);
+        tile.setEnabled(powered <= 0);
     }
 
     @Override

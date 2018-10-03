@@ -26,7 +26,10 @@ import javax.annotation.Nullable;
 
 public class TileHeater extends TileEntity implements ITickable
 {
-    public boolean active = false;
+    private static final int BURN = LYA.instance.config.fuelPerTick;
+
+    private boolean enabled = true;
+    private boolean burning = false;
     public EnumFacing facing = EnumFacing.NORTH;
 
     private ItemStackHandler buck = new ItemStackHandler(2)
@@ -37,7 +40,7 @@ public class TileHeater extends TileEntity implements ITickable
         {
             if(slot == 1) return stack;
             FluidStack f = FluidUtil.getFluidContained(stack);
-            if(f != null /*&& (f.getFluid().getName().equals("diesel"))||f.getFluid().getName().equals("biodiesel")*/) return super.insertItem(slot, stack, simulate);
+            if(f != null && (f.getFluid().getName().equals("diesel"))||f.getFluid().getName().equals("biodiesel")) return super.insertItem(slot, stack, simulate);
             return stack;
         }
     };
@@ -87,18 +90,15 @@ public class TileHeater extends TileEntity implements ITickable
         {
             handleInventory();
 
-            FluidStack s = tank.drain(LYA.instance.config.fuelPerTick, false);
-            if (s != null && s.amount == LYA.instance.config.fuelPerTick)
+            FluidStack s = tank.drain(BURN, false);
+            if (enabled && s != null && s.amount == BURN)
             {
-                tank.drain(10, true);
-                setActive(true);
+                tank.drain(BURN, true);
+                setBurning(true);
 
                 heater.transferHeatTo(LYA.instance.config.heatPerFuel);
             }
-            else
-            {
-                setActive(false);
-            }
+            else setBurning(false);
 
             heater.simulateHeat();
             heater.applyTemperatureChange();
@@ -120,17 +120,28 @@ public class TileHeater extends TileEntity implements ITickable
         return heater.getTemp();
     }
 
-    public void setActive(boolean active)
+    public void setEnabled(boolean enabled)
     {
-        if(this.active == active) return;
+        this.enabled = enabled;
+    }
 
-        this.active = active;
+    public void setBurning(boolean burning)
+    {
+        if(this.burning == burning) return;
+
+        this.burning = burning;
         synchronise();
+    }
+
+    public boolean isBurning()
+    {
+        return burning;
     }
 
     private void write(NBTTagCompound nbtTags)
     {
-        nbtTags.setBoolean("active", active);
+        nbtTags.setBoolean("enabled", enabled);
+        nbtTags.setBoolean("burning", burning);
         nbtTags.setInteger("facing", facing.getIndex());
         nbtTags.setDouble("temperature", heater.getTemp());
         nbtTags.setTag("items", buck.serializeNBT());
@@ -139,7 +150,8 @@ public class TileHeater extends TileEntity implements ITickable
 
     private void read(NBTTagCompound nbtTags)
     {
-        if(nbtTags.hasKey("active")) active = nbtTags.getBoolean("active");
+        if(nbtTags.hasKey("enabled")) enabled = nbtTags.getBoolean("enabled");
+        if(nbtTags.hasKey("burning")) burning = nbtTags.getBoolean("burning");
         if(nbtTags.hasKey("facing")) facing = EnumFacing.getFront(nbtTags.getInteger("facing"));
         if(nbtTags.hasKey("temperature")) heater.setTemp(nbtTags.getDouble("temperature"));
         if(nbtTags.hasKey("items")) buck.deserializeNBT(NBTTagCompound.class.cast(nbtTags.getTag("items")));
