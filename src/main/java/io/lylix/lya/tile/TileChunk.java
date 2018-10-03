@@ -136,13 +136,30 @@ public class TileChunk extends TileEntity implements ITickable, IChunkLoader
 
     private ChunkPos translate(int id)
     {
-        // TODO : orientate
         int cx = getPos().getX() >> 4;
         int cz = getPos().getZ() >> 4;
         int xx = id%7;
         int yy = id/7;
-        cx-= xx-3;
-        cz-= yy-3;
+        switch (facing)
+        {
+            default:
+            case NORTH:
+                cx-= xx-3;
+                cz-= yy-3;
+                break;
+            case SOUTH:
+                cx+= xx-3;
+                cz+= yy-3;
+                break;
+            case EAST:
+                cx+= yy-3;
+                cz-= xx-3;
+                break;
+            case WEST:
+                cx-= yy-3;
+                cz+= xx-3;
+                break;
+        }
         return new ChunkPos(cx, cz);
     }
 
