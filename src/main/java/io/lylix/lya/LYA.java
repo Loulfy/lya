@@ -21,7 +21,7 @@ public class LYA
 {
     public static final String ID = "lya";
     public static final String NAME = "Lya";
-    public static final String VERSION = "@version@";
+    public static final String VERSION = "${version}";
 
     @SidedProxy(clientSide = "io.lylix.lya.proxy.ClientProxy", serverSide = "io.lylix.lya.proxy.ServerProxy")
     public static CommonProxy proxy;

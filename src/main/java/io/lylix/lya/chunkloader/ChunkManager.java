@@ -21,9 +21,8 @@ public class ChunkManager implements LoadingCallback
     @Override
     public void ticketsLoaded(List<Ticket> tickets, World world)
     {
-        LYA.logger.info("WORLD: "+world.getWorldInfo().getWorldName());
+        LYA.logger.info("WORLD: "+world.provider.getDimension());
         for(Ticket ticket : tickets)
-
         {
             ticket.setChunkListDepth(49);
             LYA.logger.info(ticket.getMaxChunkListDepth());

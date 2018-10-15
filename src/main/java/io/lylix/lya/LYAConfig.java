@@ -9,7 +9,7 @@ public class LYAConfig
 {
     public int consume = 1000;
     public int capacity = 10000000;
-    public int transfer = 40000;
+    public int transfer = 50000;
 
     public int fuelPerTick = 10;
     public int heatPerFuel = 100;
@@ -43,7 +43,7 @@ public class LYAConfig
         // chunkloader
         consume = cfg.getInt("consume", CHUNKLOADER, consume, 100, 10000, "Energy multiplier consumed per tick");
         capacity = cfg.getInt("capacity", CHUNKLOADER, capacity, 100000, 10000000, "Internal capacity of the chunkloader");
-        transfer = cfg.getInt("transfer", CHUNKLOADER, transfer, 100, 40000, "Max transferred energy per tick");
+        transfer = cfg.getInt("transfer", CHUNKLOADER, transfer, 100, 100000, "Max transferred energy per tick");
 
         // heater
         fuelPerTick = cfg.getInt("fuelPerTick", HEATER, fuelPerTick, 1, 100, "Fuel burned per tick");

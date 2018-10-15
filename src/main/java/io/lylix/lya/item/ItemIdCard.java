@@ -24,7 +24,7 @@ public class ItemIdCard extends ItemBase
     public ItemIdCard()
     {
         setMaxStackSize(1);
-        addPropertyOverride(new ResourceLocation("burning"), (stack, world, entity) -> (entity != null && isValid(stack)) ? 1.0f : 0.0f);
+        addPropertyOverride(new ResourceLocation("active"), (stack, world, entity) -> (entity != null && isValid(stack)) ? 1.0f : 0.0f);
     }
 
     @Override

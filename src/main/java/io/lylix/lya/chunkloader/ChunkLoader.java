@@ -148,6 +148,7 @@ public class ChunkLoader
                     ticket.getModData().setInteger("y", tileEntity.getPos().getY());
                     ticket.getModData().setInteger("z", tileEntity.getPos().getZ());
                     ticket.getModData().setInteger("d", tileEntity.getWorld().provider.getDimension());
+                    LYA.logger.info(tileEntity.getWorld().provider.getDimension());
 
                     setTicket(ticket);
                 }
@@ -167,6 +168,7 @@ public class ChunkLoader
     {
         IChunkLoader tile = IChunkLoader.class.cast(tileEntity);
 
+        LYA.logger.info("UPDATE {}", this);
         LYA.logger.info("STATE:{}",tile.getState());
         LYA.logger.info("OPERA:{}",canOperate());
 

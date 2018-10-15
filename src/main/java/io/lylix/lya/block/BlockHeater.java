@@ -59,6 +59,8 @@ public class BlockHeater extends BlockBase implements ITileEntityProvider
     {
         TileHeater tile = getTile(world, pos);
         if(tile != null) tile.facing = placer.getHorizontalFacing().getOpposite();
+        LYA.logger.info("LEFT="+tile.facing.rotateYCCW());
+        LYA.logger.info("RIGHT="+tile.facing.rotateY());
     }
 
     @Override
