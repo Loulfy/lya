@@ -29,7 +29,7 @@ public class CommandChunk extends CommandBase
 
     public CommandChunk()
     {
-        aliases = Arrays.asList(LYA.ID, "cl", "CL");
+        aliases = Arrays.asList(LYA.ID, "cl");
         loaders = LYA.proxy.getChunkManager().getLoaders();
     }
 

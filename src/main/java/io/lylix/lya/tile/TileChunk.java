@@ -42,14 +42,14 @@ public class TileChunk extends TileEntity implements ITickable, IChunkLoader
         @Override
         public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate)
         {
-            if(stack.getItem() == LYAItems.ID_CARD) return super.insertItem(slot, stack, simulate);
+            if(ItemIdCard.getOwner(stack) != null) return super.insertItem(slot, stack, simulate);
             return stack;
         }
 
         @Override
         protected void onContentsChanged(int slot)
         {
-            if(!world.isRemote && chunkloader.refreshPresence() && !chunkloader.canOperate()) setEnabled(false);
+            if(!world.isRemote && chunkloader.refreshPresence()) chunkloader.update();
             TileChunk.this.markDirty();
         }
     };
@@ -91,8 +91,8 @@ public class TileChunk extends TileEntity implements ITickable, IChunkLoader
         if(this.enabled == state) return;
 
         enabled = state;
-        chunkloader.update();
-        this.markDirty();
+
+        markDirty();
         synchronise();
     }
 
@@ -112,14 +112,12 @@ public class TileChunk extends TileEntity implements ITickable, IChunkLoader
         {
             chunkloader.tick();
 
-            if(!enabled && chunkloader.canOperate() && energy.getEnergyStored() > energy.getMaxEnergyStored()/2) setEnabled(true);
-
-            if(enabled && chunkloader.canOperate())
+            if(chunkloader.canOperate())
             {
-                int needed = getEnergyUsage();
-                if(energy.extractEnergy(needed, true) == needed) energy.extractEnergy(needed, false);
-                else setEnabled(false);
+                energy.extractEnergy(getEnergyUsage(), false);
+                setEnabled(true);
             }
+            else setEnabled(false);
         }
     }
 
@@ -138,26 +136,26 @@ public class TileChunk extends TileEntity implements ITickable, IChunkLoader
     {
         int cx = getPos().getX() >> 4;
         int cz = getPos().getZ() >> 4;
-        int xx = id%7;
-        int yy = id/7;
+        int xx = id%7 - 3;
+        int yy = id/7 - 3;
         switch (facing)
         {
             default:
             case NORTH:
-                cx-= xx-3;
-                cz-= yy-3;
+                cx-= xx;
+                cz-= yy;
                 break;
             case SOUTH:
-                cx+= xx-3;
-                cz+= yy-3;
+                cx+= xx;
+                cz+= yy;
                 break;
             case EAST:
-                cx+= yy-3;
-                cz-= xx-3;
+                cx+= yy;
+                cz-= xx;
                 break;
             case WEST:
-                cx-= yy-3;
-                cz+= xx-3;
+                cx-= yy;
+                cz+= xx;
                 break;
         }
         return new ChunkPos(cx, cz);
@@ -207,7 +205,8 @@ public class TileChunk extends TileEntity implements ITickable, IChunkLoader
     @Override
     public boolean getState()
     {
-        return enabled;
+        if(!enabled && energy.getEnergyStored() < energy.getMaxEnergyStored()/2) return false;
+        else return energy.extractEnergy(getEnergyUsage(), true) == getEnergyUsage();
     }
 
     private void write(NBTTagCompound nbtTags)

@@ -1,5 +1,7 @@
 package io.lylix.lya.item;
 
+import io.lylix.lya.LYAItems;
+import io.lylix.lya.chunkloader.ChunkManager;
 import io.lylix.lya.render.IModelRegister;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.util.ITooltipFlag;
@@ -18,7 +20,7 @@ import java.util.UUID;
 
 public class ItemIdCard extends ItemBase
 {
-    private static final String NBT_OWNER = "Owner";
+    public static final String NBT_OWNER = "Owner";
     private static final String NBT_OWNER_NAME = "OwnerName";
 
     public ItemIdCard()
@@ -38,7 +40,7 @@ public class ItemIdCard extends ItemBase
     {
         ItemStack stack = player.getHeldItem(hand);
 
-        if (!world.isRemote)
+        if(!world.isRemote)
         {
             if(player.isSneaking())
             {
@@ -63,7 +65,7 @@ public class ItemIdCard extends ItemBase
     {
         super.addInformation(stack, world, tooltip, flag);
 
-        if (stack.hasTagCompound() && stack.getTagCompound().hasKey(NBT_OWNER_NAME))
+        if(stack.hasTagCompound() && stack.getTagCompound().hasKey(NBT_OWNER_NAME))
         {
             tooltip.add("Bound to: "+stack.getTagCompound().getString(NBT_OWNER_NAME));
         }
@@ -72,7 +74,7 @@ public class ItemIdCard extends ItemBase
     private NBTTagCompound getTagCompoundSafe(ItemStack stack)
     {
         NBTTagCompound tagCompound = stack.getTagCompound();
-        if (!stack.hasTagCompound())
+        if(!stack.hasTagCompound())
         {
             tagCompound = new NBTTagCompound();
             stack.setTagCompound(tagCompound);
@@ -83,7 +85,9 @@ public class ItemIdCard extends ItemBase
     @Nullable
     public static UUID getOwner(ItemStack stack)
     {
-        if (stack.hasTagCompound() && stack.getTagCompound().hasKey(NBT_OWNER))
+        if(stack.getItem() == LYAItems.OP_CARD) return ChunkManager.FAKE_PLAYER;
+
+        if(stack.hasTagCompound() && stack.getTagCompound().hasKey(NBT_OWNER))
         {
             return UUID.fromString(stack.getTagCompound().getString(NBT_OWNER));
         }

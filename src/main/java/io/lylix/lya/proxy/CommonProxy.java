@@ -9,12 +9,12 @@ import io.lylix.lya.block.BlockBase;
 import io.lylix.lya.render.Renderer;
 import io.lylix.lya.chunkloader.ChunkManager;
 import io.lylix.lya.tile.TileHeater;
+import io.lylix.lya.worldborder.WorldBorderRedirect;
 import net.minecraft.item.Item;
 import net.minecraft.block.Block;
 import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -37,12 +37,16 @@ public class CommonProxy
     {
         MinecraftForge.EVENT_BUS.register(this);
 
-        LYA.instance.network.registerMessage(MessageChunkSync.class, MessageChunkSync.class, 0, Side.SERVER);
+        if(LYA.instance.config.isEnableChunky())
+        {
+            LYA.instance.network.registerMessage(MessageChunkSync.class, MessageChunkSync.class, 0, Side.SERVER);
+            registerBlock(LYABlocks.CHUNK, "chunkloader");
+            registerItem(LYAItems.ID_CARD, "id_card");
+            registerItem(LYAItems.OP_CARD, "op_card");
+        }
 
-        registerBlock(LYABlocks.CHUNK, "chunkloader");
-        registerItem(LYAItems.ID_CARD, "id_card");
-
-        if(Loader.isModLoaded("mekanism")) registerBlock(LYABlocks.HEATER, "heater");
+        if(LYA.instance.config.isEnableHeater()) registerBlock(LYABlocks.HEATER, "heater");
+        if(LYA.instance.config.isEnableBorder()) MinecraftForge.EVENT_BUS.register(new WorldBorderRedirect());
     }
 
     public void init(FMLInitializationEvent e)
@@ -52,9 +56,9 @@ public class CommonProxy
         ForgeChunkManager.getConfig().getInt("maximumChunksPerTicket", LYA.ID, 50, 50, 50, "");
 
         NetworkRegistry.INSTANCE.registerGuiHandler(LYA.instance, new GuiProxy());
-        GameRegistry.registerTileEntity(TileChunk.class, "Chunkloader");
 
-        if(Loader.isModLoaded("mekanism")) GameRegistry.registerTileEntity(TileHeater.class, "Heater");
+        if(LYA.instance.config.isEnableChunky()) GameRegistry.registerTileEntity(TileChunk.class, "Chunkloader");
+        if(LYA.instance.config.isEnableHeater()) GameRegistry.registerTileEntity(TileHeater.class, "Heater");
     }
 
     public void postInit(FMLPostInitializationEvent e)
