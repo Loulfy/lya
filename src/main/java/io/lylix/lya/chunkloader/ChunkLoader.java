@@ -42,12 +42,12 @@ public class ChunkLoader
             {
                 if(ForgeChunkManager.getPersistentChunksFor(tileEntity.getWorld()).keys().contains(chunk))
                 {
-                    LYA.logger.info("unforce chunk {}", chunk);
+                    LYA.logger.debug("unforce chunk {}", chunk);
                     ForgeChunkManager.unforceChunk(chunkTicket, chunk);
                 }
             }
 
-            LYA.logger.info("release ticket");
+            LYA.logger.debug("release ticket");
             ForgeChunkManager.releaseTicket(chunkTicket);
         }
 
@@ -70,7 +70,7 @@ public class ChunkLoader
                     if(ForgeChunkManager.getPersistentChunksFor(tileEntity.getWorld()).keys().contains(chunk))
                     {
                         ForgeChunkManager.unforceChunk(chunkTicket, chunk);
-                        LYA.logger.info("update chunk : unforce {}", chunk);
+                        LYA.logger.debug("update chunk : unforce {}", chunk);
                     }
                 }
             }
@@ -80,7 +80,7 @@ public class ChunkLoader
                 if(!chunkTicket.getChunkList().contains(chunk))
                 {
                     ForgeChunkManager.forceChunk(chunkTicket, chunk);
-                    LYA.logger.info("update chunk : force {}", chunk);
+                    LYA.logger.debug("update chunk : force {}", chunk);
                 }
             }
         }
@@ -93,7 +93,7 @@ public class ChunkLoader
         if(!chunkSet.equals(loader.getChunkSet()))
         {
             chunkSet = loader.getChunkSet();
-            LYA.logger.info("Refresh chunkset (get {} chunk)", chunkSet.size());
+            LYA.logger.debug("Refresh chunkset (get {} chunk)", chunkSet.size());
             sortChunks();
         }
     }
@@ -102,7 +102,7 @@ public class ChunkLoader
     {
         setTicket(ticket);
 
-        LYA.logger.info("force chunks ({})", chunkSet.size());
+        LYA.logger.debug("force chunks ({})", chunkSet.size());
         for(ChunkPos chunk : chunkSet)
         {
             ForgeChunkManager.forceChunk(chunkTicket, chunk);
@@ -111,17 +111,17 @@ public class ChunkLoader
 
     public void forceChunks()
     {
-        LYA.logger.info("TRY FORCE {}", this);
+        LYA.logger.debug("TRY FORCE {}", this);
         sortChunks();
     }
 
     public void unforceChunks()
     {
-        LYA.logger.info("TRY UNFORCE {}", this);
+        LYA.logger.debug("TRY UNFORCE {}", this);
         for(ChunkPos chunk : chunkTicket.getChunkList())
         {
             ForgeChunkManager.unforceChunk(chunkTicket, chunk);
-            LYA.logger.info("update chunk : unforce {}", chunk);
+            LYA.logger.debug("update chunk : unforce {}", chunk);
         }
     }
 
@@ -152,7 +152,7 @@ public class ChunkLoader
             refreshChunkSet();
             refreshPresence();
 
-            LYA.logger.info("create ticket");
+            LYA.logger.debug("create ticket");
             Ticket ticket = ForgeChunkManager.requestTicket(LYA.instance, tileEntity.getWorld(), Type.NORMAL);
 
             if(ticket != null)
@@ -169,7 +169,7 @@ public class ChunkLoader
 
     public void invalidate()
     {
-        LYA.logger.info("INVALIDATE");
+        LYA.logger.debug("INVALIDATE");
         if(!tileEntity.getWorld().isRemote)
         {
             release();
@@ -191,7 +191,7 @@ public class ChunkLoader
             online = LYAUtils.getOnlinePlayerUUID();
             online.add(ChunkManager.FAKE_PLAYER);
             online = online.stream().filter(owner::contains).collect(Collectors.toSet());
-            LYA.logger.info("Refresh presence (get {} owner)", owner.size());
+            LYA.logger.debug("Refresh presence (get {} owner)", owner.size());
             return true;
         }
         return false;

@@ -9,7 +9,6 @@ import io.lylix.lya.block.BlockBase;
 import io.lylix.lya.render.Renderer;
 import io.lylix.lya.chunkloader.ChunkManager;
 import io.lylix.lya.tile.TileHeater;
-import io.lylix.lya.worldborder.WorldBorderRedirect;
 import net.minecraft.item.Item;
 import net.minecraft.block.Block;
 import net.minecraftforge.common.ForgeChunkManager;
@@ -39,14 +38,18 @@ public class CommonProxy
 
         if(LYA.instance.config.isEnableChunky())
         {
+            LYA.logger.info("Enable: chunkloader");
             LYA.instance.network.registerMessage(MessageChunkSync.class, MessageChunkSync.class, 0, Side.SERVER);
             registerBlock(LYABlocks.CHUNK, "chunkloader");
             registerItem(LYAItems.ID_CARD, "id_card");
             registerItem(LYAItems.OP_CARD, "op_card");
         }
 
-        if(LYA.instance.config.isEnableHeater()) registerBlock(LYABlocks.HEATER, "heater");
-        if(LYA.instance.config.isEnableBorder()) MinecraftForge.EVENT_BUS.register(new WorldBorderRedirect());
+        if(LYA.instance.config.isEnableHeater())
+        {
+            LYA.logger.info("Enable: heater");
+            registerBlock(LYABlocks.HEATER, "heater");
+        }
     }
 
     public void init(FMLInitializationEvent e)

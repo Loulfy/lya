@@ -17,8 +17,6 @@ public class GuiChunk extends GuiBase
     private static final int WIDTH = 210;//180
     private static final int HEIGHT = 194;//152
 
-    private static final ResourceLocation background = new ResourceLocation(LYA.ID, "textures/gui/guichunk.png");
-
     private TileChunk tile;
 
     public GuiChunk(ContainerChunk container, TileChunk tile)
@@ -74,7 +72,7 @@ public class GuiChunk extends GuiBase
     {
         super.actionPerformed(button);
 
-        LYA.logger.info("Button {} clicked!", button.id);
+        LYA.logger.debug("Button {} clicked!", button.id);
 
         if(button.id == 50) LYA.proxy.getRenderer().toggle();
 

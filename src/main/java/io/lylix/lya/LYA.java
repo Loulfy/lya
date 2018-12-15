@@ -16,12 +16,11 @@ import org.apache.logging.log4j.Logger;
 import io.lylix.lya.proxy.CommonProxy;
 import io.lylix.lya.command.CommandChunk;
 
-@Mod(modid = LYA.ID, name = LYA.NAME, version = LYA.VERSION, dependencies = "after:mekanism;after:redstoneflux;")
+@Mod(modid = LYA.ID, name = LYA.NAME, version = "${version}", dependencies = "after:mekanism;after:redstoneflux;")
 public class LYA
 {
     public static final String ID = "lya";
     public static final String NAME = "Lya";
-    public static final String VERSION = "${version}";
 
     @SidedProxy(clientSide = "io.lylix.lya.proxy.ClientProxy", serverSide = "io.lylix.lya.proxy.ServerProxy")
     public static CommonProxy proxy;

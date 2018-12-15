@@ -86,7 +86,7 @@ public class Renderer
     public void clean()
     {
         tiles.clear();
-        LYA.logger.info("PURGE 3D");
+        LYA.logger.debug("PURGE 3D");
     }
 
     public Set<TileChunk> getTiles()

@@ -45,7 +45,7 @@ public class GuiProxy implements IGuiHandler
         if(te instanceof TileChunk)
         {
             TileChunk tile = TileChunk.class.cast(te);
-            LYA.logger.info("OPEN GUI CHUNK");
+            LYA.logger.debug("OPEN GUI CHUNK");
             return new GuiChunk(new ContainerChunk(player.inventory, tile), tile);
         }
         if(te instanceof TileHeater)

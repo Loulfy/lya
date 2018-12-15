@@ -59,7 +59,7 @@ public class ChunkManager implements LoadingCallback
         TileEntity tileEntity = event.getWorld().getTileEntity(event.getPos());
         if(tileEntity instanceof IChunkLoader)
         {
-            LYA.logger.info("PLACED CHUNKY");
+            LYA.logger.debug("PLACED CHUNKY");
 
             IChunkLoader tile = IChunkLoader.class.cast(tileEntity);
             tile.getChunkLoader().create();
@@ -73,7 +73,7 @@ public class ChunkManager implements LoadingCallback
         TileEntity tileEntity = event.getWorld().getTileEntity(event.getPos());
         if(tileEntity instanceof IChunkLoader)
         {
-            LYA.logger.info("BROKE CHUNKY");
+            LYA.logger.debug("BROKE CHUNKY");
 
             IChunkLoader tile = IChunkLoader.class.cast(tileEntity);
             tiles.remove(tile);
@@ -83,14 +83,14 @@ public class ChunkManager implements LoadingCallback
     @SubscribeEvent
     public static void onPlayerLogin(PlayerEvent.PlayerLoggedInEvent e)
     {
-        LYA.logger.info("PLAYER LOGIN : {}", e.player.getName());
+        LYA.logger.debug("PLAYER LOGIN : {}", e.player.getName());
         tiles.stream().filter(te -> te.getChunkLoader().contains(e.player.getGameProfile())).forEach(te -> te.getChunkLoader().login(e.player));
     }
 
     @SubscribeEvent
     public static void onPlayerLogin(PlayerEvent.PlayerLoggedOutEvent e)
     {
-        LYA.logger.info("PLAYER LOGOUT : {}", e.player.getName());
+        LYA.logger.debug("PLAYER LOGOUT : {}", e.player.getName());
         tiles.stream().filter(te -> te.getChunkLoader().contains(e.player.getGameProfile())).forEach(te -> te.getChunkLoader().logout(e.player));
     }
 

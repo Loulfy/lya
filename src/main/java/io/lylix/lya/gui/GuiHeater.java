@@ -38,7 +38,7 @@ public class GuiHeater extends GuiBase
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
     {
         fontRenderer.drawString("Liquid Fueled Heater", (175/2)-(fontRenderer.getStringWidth("Liquid Fueled Heater")/2), 6, 0x404040);
-        fontRenderer.drawString( "Inventory", 7, 100, 0x404040);
+        fontRenderer.drawString("Inventory", 7, 100, 0x404040);
         fontRenderer.drawString("Temperature", 50, 40, 0x404040);
         fontRenderer.drawString(UnitDisplayUtils.getTemperatureDisplay(tile.getTemp(), UnitDisplayUtils.TemperatureUnit.AMBIENT), 60, 50, 0x404040);
     }
