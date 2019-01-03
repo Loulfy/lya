@@ -1,6 +1,7 @@
 package io.lylix.lya.network;
 
 import io.lylix.lya.LYA;
+import io.lylix.lya.multiblock.heater.TileHeaterMain;
 import io.lylix.lya.tile.TileChunk;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.tileentity.TileEntity;
@@ -53,6 +54,7 @@ public class MessageChunkSync implements IMessage, IMessageHandler<MessageChunkS
         {
             TileEntity te = world.getTileEntity(msg.pos);
             if(te instanceof TileChunk) TileChunk.class.cast(te).action(msg.id);
+            else if(te instanceof TileHeaterMain) TileHeaterMain.class.cast(te).toggle();
         }
     }
 }

@@ -19,7 +19,7 @@ public class ItemOpCard extends ItemBase
     @Override
     public void initModel(IModelRegister register)
     {
-        register.setModel(this, 0, new ModelResourceLocation("lya:id_card_active", "inventory"));
+        register.setModel(this, 0, new ModelResourceLocation("lya:op_card", "inventory"));
     }
 
     @Override

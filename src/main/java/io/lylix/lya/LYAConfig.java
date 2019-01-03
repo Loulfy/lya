@@ -5,6 +5,8 @@ import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 
 public class LYAConfig
 {
@@ -13,15 +15,21 @@ public class LYAConfig
     public int transfer = 50000;
 
     public int fuelPerTick = 10;
-    public int heatPerFuel = 100;
+    public float powHeatCoef = 1.4f;
+
+    private Map<String,Float> fuelHeatPowerMap = new HashMap<>();
+    private String[] fuelMap = {"lava:1","diesel:4","biodiesel:2"};
 
     public double JOULES = 2.5;
 
     private boolean enableChunky = true;
-    private boolean enableHeater = false;
+    private boolean enableHeater = true;
 
     private final static String CHUNKLOADER = "chunkloader";
     private final static String HEATER = "heater";
+
+    private final static String MK = "mekanism";
+    private final static String ZC = "zerocore";
 
     private Configuration cfg;
     private File dir;
@@ -34,7 +42,7 @@ public class LYAConfig
         loadConfig();
 
         // Hook Mekanism Config : "JoulesToForge"
-        JOULES = getModConfig("mekanism").get("general", "JoulesToForge", JOULES).getDouble();
+        if(Loader.isModLoaded(MK)) JOULES = getModConfig(MK).get("general", "JoulesToForge", JOULES).getDouble();
     }
 
     public void loadConfig()
@@ -47,8 +55,12 @@ public class LYAConfig
         transfer = cfg.getInt("transfer", CHUNKLOADER, transfer, 100, 100000, "Max transferred energy per tick");
 
         // heater
-        fuelPerTick = cfg.getInt("fuelPerTick", HEATER, fuelPerTick, 1, 1000, "Fuel burned per tick");
-        heatPerFuel = cfg.getInt("heatPerFuel", HEATER, heatPerFuel, 1, 1000, "Heat generated per fuel");
+        fuelPerTick = cfg.getInt("fuelPerTick", HEATER, fuelPerTick, 1, 100, "Fuel burned per tick");
+        powHeatCoef = cfg.getFloat("powHeatCoef", HEATER, powHeatCoef, 1, 2, "Power heat coefficient");
+
+        fuelMap = cfg.getStringList("fuelHeatMap", HEATER, fuelMap, "Liquid fuel heat power map");
+        parseLiquidFuelPower();
+
 
         // enable
         enableChunky = cfg.getBoolean("enable", CHUNKLOADER, enableChunky, "Enable this addon");
@@ -64,6 +76,29 @@ public class LYAConfig
         return cfg;
     }
 
+    private void parseLiquidFuelPower()
+    {
+        for(String s : fuelMap)
+        {
+            String[] m = s.split(":");
+            if(m.length < 2) continue;
+
+            try
+            {
+                fuelHeatPowerMap.put(m[0], Float.valueOf(m[1]));
+            }
+            catch(NumberFormatException ignored)
+            {
+                LYA.logger.warn("Config Error: Number Format Exception from {}", s);
+            }
+        }
+    }
+
+    public float getLiquidFuelPower(String name)
+    {
+        return fuelHeatPowerMap.getOrDefault(name, 0.f);
+    }
+
     public boolean isEnableChunky()
     {
         return enableChunky;
@@ -71,6 +106,11 @@ public class LYAConfig
 
     public boolean isEnableHeater()
     {
-        return enableHeater && Loader.isModLoaded("mekanism");
+        return enableHeater && Loader.isModLoaded(MK) && Loader.isModLoaded(ZC);
+    }
+
+    public static boolean isEnable(String mod)
+    {
+        return Loader.isModLoaded(mod) || mod.equals("lya");
     }
 }

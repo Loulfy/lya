@@ -6,7 +6,7 @@ import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 
-public class Gauge implements IWidget
+public class Gauge extends Widget
 {
     // gauge dimension
     private static final int W = 18;
@@ -14,31 +14,17 @@ public class Gauge implements IWidget
 
     private FluidTank tank;
 
-    private int x;
-    private int y;
-
-    private int mx;
-    private int my;
-
     public Gauge(FluidTank tank, int x, int y)
     {
+        super(x, y, W, H);
         this.tank = tank;
-        this.x = x;
-        this.y = y;
-    }
-
-    @Override
-    public void init(int guiLeft, int guiTop)
-    {
-        mx = x+guiLeft;
-        my = y+guiTop;
     }
 
     @Override
     public void render(GuiBase gui, int mouseX, int mouseY)
     {
         gui.bindTexture("mekanism", "gui/elements/guigaugestandard.png");
-        gui.drawTexture(mx, my, 0, 0, W, H);
+        gui.drawTexture(getX(), getY(), 0, 0, W, H);
 
         FluidStack stack = tank.getFluid();
         if(stack != null)
@@ -46,16 +32,15 @@ public class Gauge implements IWidget
             int per = (tank.getFluidAmount()*(H-2))/tank.getCapacity();
             gui.mc.renderEngine.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
             TextureAtlasSprite texture = gui.mc.getTextureMapBlocks().getTextureExtry(stack.getFluid().getStill().toString());
-            gui.drawTexturedModalRect(mx+1, my+(H-1)-per, texture, W-2, per);
+            gui.drawTexturedModalRect(getX()+1, getY()+(H-1)-per, texture, W-2, per);
         }
 
         gui.bindTexture("mekanism", "gui/elements/guigaugestandard.png");
-        gui.drawTexture(mx, my, W, 0, W, H);
-
-        if(gui.inBounds(mx, my, W, H, mouseX, mouseY)) gui.drawHoveringText(getContentDisplay(), mouseX, mouseY);
+        gui.drawTexture(getX(), getY(), W, 0, W, H);
     }
 
-    private String getContentDisplay()
+    @Override
+    public String tooltip()
     {
         FluidStack stack = tank.getFluid();
         return stack == null ? "Empty" : stack.getLocalizedName()+": "+stack.amount+"mB";

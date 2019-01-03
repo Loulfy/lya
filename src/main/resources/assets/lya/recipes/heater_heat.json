@@ -1,0 +1,35 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "conditions": [
+    {
+      "type": "lya:recipe_enabled",
+      "addon": "mekanism"
+    }
+  ],
+  "pattern": [
+    "WHW",
+    "HXH",
+    "WHW"
+  ],
+  "key": {
+    "W": {
+      "item": "lya:heater_wall"
+    },
+    "H": {
+      "nbt": {
+        "tier": 3
+      },
+      "item": "mekanism:transmitter",
+      "data": 6,
+      "type": "mekanism:item_nbt"
+    },
+    "X": {
+      "type" : "forge:ore_dict",
+      "ore" : "circuitAdvanced"
+    }
+  },
+  "result": {
+    "item": "lya:heater_heat",
+    "data": 0
+  }
+}

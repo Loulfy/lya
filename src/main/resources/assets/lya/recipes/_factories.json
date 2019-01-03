@@ -1,0 +1,5 @@
+{
+  "conditions": {
+    "recipe_enabled": "io.lylix.lya.recipe.LYARecipeEnabledCondition"
+  }
+}

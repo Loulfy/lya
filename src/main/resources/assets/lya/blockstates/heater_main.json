@@ -1,0 +1,35 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "textures": {
+      "side": "lya:blocks/heater_block",
+      "particle": "#side",
+      "down": "#side",
+      "up": "#side",
+      "north": "#side",
+      "south": "#side",
+      "west": "#side",
+      "east": "#side"
+    },
+    "model": "cube"
+  },
+  "variants": {
+    "state": {
+      "none": {"textures": {"facing": "lya:blocks/heater_front" }},
+      "assembled": {"textures": {"facing": "lya:blocks/heater_front_on" }},
+      "active": {"textures": {"facing": "lya:blocks/heater_front_active"}}
+    },
+    "hfacing": {
+      "north": {"textures": {"north": "#facing" }},
+      "south": {"textures": {"south": "#facing" }},
+      "west": {"textures": {"west": "#facing" }},
+      "east": {"textures": {"east": "#facing" }}
+    },
+    "inventory": {
+      "transform": "forge:default-block",
+      "textures": {
+        "north": "lya:blocks/heater_front"
+      }
+    }
+  }
+}

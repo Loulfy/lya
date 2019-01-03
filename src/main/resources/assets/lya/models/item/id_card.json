@@ -1,7 +1,7 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "lya:items/map_off"
+    "layer0": "lya:items/card_empty"
   },
   "overrides": [
     {

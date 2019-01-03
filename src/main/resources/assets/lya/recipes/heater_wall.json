@@ -1,5 +1,11 @@
 {
   "type": "minecraft:crafting_shaped",
+  "conditions": [
+    {
+      "type": "lya:recipe_enabled",
+      "addon": "mekanism"
+    }
+  ],
   "pattern": [
     "STS",
     "TBT",
@@ -7,7 +13,8 @@
   ],
   "key": {
     "B": {
-      "item": "minecraft:bucket"
+      "ore": "ingotOsmium",
+      "type": "forge:ore_dict"
     },
     "S": {
       "ore": "ingotSteel",
@@ -19,7 +26,8 @@
     }
   },
   "result": {
-    "item": "lya:heater",
-    "data": 0
+    "item": "lya:heater_wall",
+    "data": 0,
+    "count": 4
   }
 }

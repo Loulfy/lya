@@ -40,7 +40,7 @@ public class TileHeater extends TileEntity implements ITickable
         {
             if(slot == 1) return stack;
             FluidStack f = FluidUtil.getFluidContained(stack);
-            if(f != null && (f.getFluid().getName().equals("diesel"))||f.getFluid().getName().equals("biodiesel")) return super.insertItem(slot, stack, simulate);
+            if(f != null && (f.getFluid().getName().equals("water"))||f.getFluid().getName().equals("biodiesel")) return super.insertItem(slot, stack, simulate);
             return stack;
         }
     };
@@ -58,7 +58,7 @@ public class TileHeater extends TileEntity implements ITickable
         @Override
         public boolean canFillFluidType(FluidStack fluid)
         {
-            return fluid.getFluid().getName().equals("biodiesel") || FluidRegistry.getFluid("diesel") == fluid.getFluid();
+            return fluid.getFluid().getName().equals("biodiesel") || FluidRegistry.getFluid("water") == fluid.getFluid();
         }
     };
 
@@ -96,7 +96,7 @@ public class TileHeater extends TileEntity implements ITickable
                 tank.drain(BURN, true);
                 setBurning(true);
 
-                heater.transferHeatTo(LYA.instance.config.heatPerFuel);
+                heater.transferHeatTo(100);
             }
             else setBurning(false);
 

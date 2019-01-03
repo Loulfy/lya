@@ -3,12 +3,13 @@ package io.lylix.lya.proxy;
 import io.lylix.lya.LYA;
 import io.lylix.lya.LYAItems;
 import io.lylix.lya.LYABlocks;
+import io.lylix.lya.integration.LYAHook;
+import io.lylix.lya.multiblock.heater.HeaterBlockBase;
 import io.lylix.lya.network.*;
 import io.lylix.lya.tile.TileChunk;
 import io.lylix.lya.block.BlockBase;
 import io.lylix.lya.render.Renderer;
 import io.lylix.lya.chunkloader.ChunkManager;
-import io.lylix.lya.tile.TileHeater;
 import net.minecraft.item.Item;
 import net.minecraft.block.Block;
 import net.minecraftforge.common.ForgeChunkManager;
@@ -30,6 +31,7 @@ public class CommonProxy
     protected List<Item> items = new LinkedList<>();
     protected List<BlockBase> blocks = new LinkedList<>();
 
+    private LYAHook hook = new LYAHook();
     private ChunkManager manager;
 
     public void preInit(FMLPreInitializationEvent e)
@@ -48,7 +50,12 @@ public class CommonProxy
         if(LYA.instance.config.isEnableHeater())
         {
             LYA.logger.info("Enable: heater");
-            registerBlock(LYABlocks.HEATER, "heater");
+            registerMultiblock(LYABlocks.HEATER_WALL);
+            registerMultiblock(LYABlocks.HEATER_MAIN);
+            registerMultiblock(LYABlocks.HEATER_CORE);
+            registerMultiblock(LYABlocks.HEATER_HEAT);
+            registerMultiblock(LYABlocks.HEATER_FUEL);
+            registerMultiblock(LYABlocks.HEATER_INFO);
         }
     }
 
@@ -61,7 +68,8 @@ public class CommonProxy
         NetworkRegistry.INSTANCE.registerGuiHandler(LYA.instance, new GuiProxy());
 
         if(LYA.instance.config.isEnableChunky()) GameRegistry.registerTileEntity(TileChunk.class, "Chunkloader");
-        if(LYA.instance.config.isEnableHeater()) GameRegistry.registerTileEntity(TileHeater.class, "Heater");
+
+        hook.init();
     }
 
     public void postInit(FMLPostInitializationEvent e)
@@ -99,9 +107,16 @@ public class CommonProxy
         registerItem(block.createItem(), id);
     }
 
+    private void registerMultiblock(HeaterBlockBase block)
+    {
+        registerBlock(block, block.getId());
+        GameRegistry.registerTileEntity(block.getTileClass(), block.getId());
+    }
+
     private void registerItem(Item item, String id)
     {
-        item.setUnlocalizedName(id).setRegistryName(LYA.ID+":"+id);
+        //item.setUnlocalizedName(id).setRegistryName(LYA.ID+":"+id);
+        item.setUnlocalizedName(id).setRegistryName(id);
         items.add(item);
     }
 

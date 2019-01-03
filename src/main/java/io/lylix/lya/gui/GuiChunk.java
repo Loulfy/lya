@@ -3,6 +3,7 @@ package io.lylix.lya.gui;
 import io.lylix.lya.LYA;
 import io.lylix.lya.gui.widget.Button;
 import io.lylix.lya.gui.widget.Check;
+import io.lylix.lya.gui.widget.Power;
 import io.lylix.lya.network.MessageChunkSync;
 import io.lylix.lya.container.ContainerChunk;
 import io.lylix.lya.tile.TileChunk;
@@ -25,6 +26,7 @@ public class GuiChunk extends GuiBase
         xSize = WIDTH;
         ySize = HEIGHT;
         this.tile = tile;
+        addWidget(new Power(tile.getEnergy(), 20, 27));
     }
 
     @Override
@@ -62,8 +64,8 @@ public class GuiChunk extends GuiBase
     {
         fontRenderer.drawString("Chunk Loader", (175/2)-(fontRenderer.getStringWidth("Chunk Loader")/2), 4, 0x404040);
         fontRenderer.drawString("Inventory", 7, 100, 0x404040);
-        int per = (tile.getEnergy().getEnergyStored()*100)/tile.getEnergy().getMaxEnergyStored();
-        fontRenderer.drawString(per+"%", 140, 30, 0x404040);
+        //int per = (tile.getEnergy().getEnergyStored()*100)/tile.getEnergy().getMaxEnergyStored();
+        //fontRenderer.drawString(per+"%", 140, 30, 0x404040);
         fontRenderer.drawString(getConsumptionDisplay(), 80, 100, 0x404040);
     }
 

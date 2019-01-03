@@ -1,12 +1,11 @@
 package io.lylix.lya.gui;
 
 import io.lylix.lya.LYA;
-import io.lylix.lya.gui.widget.IWidget;
+import io.lylix.lya.gui.widget.Widget;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.inventory.Container;
 import net.minecraft.util.ResourceLocation;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -16,7 +15,7 @@ public abstract class GuiBase extends GuiContainer
 {
     private static final Map<String, ResourceLocation> TEXTURE_CACHE = new HashMap<>();
 
-    private Set<IWidget> widgetSet;
+    private Set<Widget> widgetSet;
 
     public GuiBase(Container container)
     {
@@ -28,7 +27,7 @@ public abstract class GuiBase extends GuiContainer
     public void initGui()
     {
         super.initGui();
-        for(IWidget widget : widgetSet) widget.init(guiLeft, guiTop);
+        for(Widget widget : widgetSet) widget.init(guiLeft, guiTop);
     }
 
     @Override
@@ -37,18 +36,30 @@ public abstract class GuiBase extends GuiContainer
         super.drawDefaultBackground();
         super.drawScreen(mouseX, mouseY, partialTicks);
         super.renderHoveredToolTip(mouseX, mouseY);
+        renderWidgetToolTip(mouseX, mouseY);
     }
 
     @Override
     protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY)
     {
         drawBackground();
-        for(IWidget widget : widgetSet) widget.render(this, mouseX, mouseY);
+        for(Widget widget : widgetSet) widget.render(this, mouseX, mouseY);
     }
 
     public void drawBackground()
     {
 
+    }
+
+    private void renderWidgetToolTip(int mouseX, int mouseY)
+    {
+        for(Widget widget : widgetSet)
+        {
+            if(!widget.tooltip().isEmpty() && widget.inBounds(mouseX, mouseY))
+            {
+                drawHoveringText(widget.tooltip(), mouseX, mouseY);
+            }
+        }
     }
 
     @Override
@@ -78,7 +89,7 @@ public abstract class GuiBase extends GuiContainer
         drawTexturedModalRect(x, y, textureX, textureY, width, height);
     }
 
-    public void addWidget(IWidget widget)
+    public void addWidget(Widget widget)
     {
         widgetSet.add(widget);
     }

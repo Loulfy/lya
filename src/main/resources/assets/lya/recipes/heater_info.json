@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "conditions": [
+    {
+      "type": "lya:recipe_enabled",
+      "addon": "mekanism"
+    }
+  ],
+  "pattern": [
+    " W ",
+    "WXW",
+    " W "
+  ],
+  "key": {
+    "W": {
+      "item": "lya:heater_wall"
+    },
+    "X": {
+      "type" : "forge:ore_dict",
+      "ore" : "circuitAdvanced"
+    }
+  },
+  "result": {
+    "item": "lya:heater_info",
+    "data": 0
+  }
+}

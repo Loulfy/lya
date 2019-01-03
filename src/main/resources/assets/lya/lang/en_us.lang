@@ -6,3 +6,14 @@ item.id_card.name=ID Card
 item.op_card.name=OP Card
 
 misc.lya:energy_stored=%d / %d FE
+
+tile.heater_main.name=Heater Controller
+tile.heater_wall.name=Heater Wall
+tile.heater_core.name=Heater Core
+tile.heater_heat.name=Heater Heat Port
+tile.heater_fuel.name=Heater Fuel Port
+tile.heater_info.name=Heater Info Port
+
+lya:api.multiblock.validation.main_already_present=There is already a controller in the machine
+lya:api.multiblock.validation.main_missing=You need a controller in the machine
+lya:api.multiblock.validation.invalid_block=Block at %1$d, %2$d, %3$d is not valid for the machine

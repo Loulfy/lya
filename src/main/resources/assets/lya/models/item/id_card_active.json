@@ -1,6 +1,6 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "lya:items/map_on"
+    "layer0": "lya:items/card_bind"
   }
 }

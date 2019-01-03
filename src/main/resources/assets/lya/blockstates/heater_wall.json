@@ -1,0 +1,37 @@
+{
+  "variants": {
+    "faces=none": { "model": "lya:heater_wall_single" },
+    "faces=all": { "model": "lya:heater_wall_single" },
+    "faces=face_d": { "model": "lya:heater_wall_face" },
+    "faces=face_u": { "model": "lya:heater_wall_face" },
+    "faces=face_e": { "model": "lya:heater_wall_face" },
+    "faces=face_w": { "model": "lya:heater_wall_face" },
+    "faces=face_s": { "model": "lya:heater_wall_face" },
+    "faces=face_n": { "model": "lya:heater_wall_face" },
+    "faces=angle_sw": { "model": "lya:heater_wall_frame"},
+    "faces=angle_es": { "model": "lya:heater_wall_frame", "y": -90},
+    "faces=angle_en": { "model": "lya:heater_wall_frame", "y": 180},
+    "faces=angle_nw": { "model": "lya:heater_wall_frame", "y": 90},
+    "faces=angle_su": { "model": "lya:heater_wall_frame", "x": -90, "y": 90 },
+    "faces=angle_ds": { "model": "lya:heater_wall_frame", "x": 90, "y": 90 },
+    "faces=angle_eu": { "model": "lya:heater_wall_frame", "x": 90, "y": -180 },
+    "faces=angle_de": { "model": "lya:heater_wall_frame", "x": 270, "y": -180 },
+    "faces=angle_nu": { "model": "lya:heater_wall_frame", "x": -90, "y": 270 },
+    "faces=angle_dn": { "model": "lya:heater_wall_frame", "x": 90, "y": 270 },
+    "faces=angle_uw": { "model": "lya:heater_wall_frame", "x": -90, "y": 180 },
+    "faces=angle_dw": { "model": "lya:heater_wall_frame", "x": 90, "y": 180 },
+    "faces=corner_suw": { "model": "lya:heater_wall_corner" },
+    "faces=corner_dsw": { "model": "lya:heater_wall_corner", "x": -90 },
+    "faces=corner_esu": { "model": "lya:heater_wall_corner", "y": -90 },
+    "faces=corner_des": { "model": "lya:heater_wall_corner", "x": -90, "y": -90 },
+    "faces=corner_enu": { "model": "lya:heater_wall_corner", "y": -180 },
+    "faces=corner_nuw": { "model": "lya:heater_wall_corner", "y": 90 },
+    "faces=corner_dnw": { "model": "lya:heater_wall_corner", "x": 180 },
+    "faces=corner_den": { "model": "lya:heater_wall_corner", "x": -90, "y": 180 },
+    "faces=opposite_ew": { "model": "lya:heater_wall_face_on" },
+    "inventory": {
+      "transform": "forge:default-block",
+      "model": "lya:heater_wall_single"
+    }
+  }
+}

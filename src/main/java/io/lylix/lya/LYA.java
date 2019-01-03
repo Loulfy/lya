@@ -16,11 +16,12 @@ import org.apache.logging.log4j.Logger;
 import io.lylix.lya.proxy.CommonProxy;
 import io.lylix.lya.command.CommandChunk;
 
-@Mod(modid = LYA.ID, name = LYA.NAME, version = "${version}", dependencies = "after:mekanism;after:redstoneflux;")
+@Mod(modid = LYA.ID, name = LYA.NAME, version = "${version}", dependencies = LYA.DEPS)
 public class LYA
 {
     public static final String ID = "lya";
     public static final String NAME = "Lya";
+    public static final String DEPS = "required-after:zerocore;after:mekanism;after:redstoneflux;after:opencomputers;";
 
     @SidedProxy(clientSide = "io.lylix.lya.proxy.ClientProxy", serverSide = "io.lylix.lya.proxy.ServerProxy")
     public static CommonProxy proxy;
@@ -39,7 +40,7 @@ public class LYA
         @Override
         public ItemStack getTabIconItem()
         {
-            return new ItemStack(LYAItems.ID_CARD);
+            return new ItemStack( config.isEnableHeater() ? LYABlocks.HEATER_MAIN : LYABlocks.CHUNK);
         }
     };
 

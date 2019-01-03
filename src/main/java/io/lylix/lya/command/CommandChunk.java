@@ -54,6 +54,7 @@ public class CommandChunk extends CommandBase
     @Override
     public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException
     {
+        if(!sender.canUseCommand(4, "lya.chunkloader.admin")) return;
         this.sender = sender;
 
         if(args.length == 0) sender.sendMessage(new TextComponentString(tag + TextFormatting.WHITE + "Hello!"));
@@ -80,7 +81,7 @@ public class CommandChunk extends CommandBase
     @Override
     public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos targetPos)
     {
-        if(args.length == 1) return Arrays.asList("name", "world", "result");
+        if(args.length == 1) return Arrays.asList("name", "world"/*, "result"*/);
         switch(args[0])
         {
             case "name":
