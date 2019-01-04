@@ -107,4 +107,11 @@ public class HeaterBlockPort extends HeaterBlockBase
             if(controller != null && controller.isAssembled()) controller.setOn(world.isBlockIndirectlyGettingPowered(pos) > 0);
         }
     }
+
+    @Override
+    @SuppressWarnings("deprecation")
+    public boolean canProvidePower(IBlockState state)
+    {
+        return getTileClass() == TileHeaterInfo.class;
+    }
 }
