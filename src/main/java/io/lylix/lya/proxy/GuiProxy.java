@@ -2,13 +2,16 @@ package io.lylix.lya.proxy;
 
 import io.lylix.lya.LYA;
 import io.lylix.lya.container.ContainerHeater;
+import io.lylix.lya.container.ContainerNode;
 import io.lylix.lya.gui.GuiChunk;
 import io.lylix.lya.gui.GuiHeater;
 import io.lylix.lya.gui.GuiMultiblockHeater;
+import io.lylix.lya.gui.GuiNode;
 import io.lylix.lya.multiblock.heater.TileHeaterMain;
 import io.lylix.lya.tile.TileChunk;
 import io.lylix.lya.container.ContainerChunk;
 import io.lylix.lya.tile.TileHeater;
+import io.lylix.lya.tile.TileNode;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
@@ -40,6 +43,11 @@ public class GuiProxy implements IGuiHandler
             TileHeaterMain tile = TileHeaterMain.class.cast(te);
             return new ContainerHeater(player.inventory, tile);
         }
+        if(te instanceof TileNode)
+        {
+            TileNode tile = TileNode.class.cast(te);
+            return new ContainerNode(player.inventory, tile);
+        }
 
         return null;
     }
@@ -64,6 +72,11 @@ public class GuiProxy implements IGuiHandler
         {
             TileHeaterMain tile = TileHeaterMain.class.cast(te);
             return new GuiMultiblockHeater(new ContainerHeater(player.inventory, tile), tile);
+        }
+        if(te instanceof TileNode)
+        {
+            TileNode tile = TileNode.class.cast(te);
+            return new GuiNode(new ContainerNode(player.inventory, tile), tile);
         }
 
         return null;

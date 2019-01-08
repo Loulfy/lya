@@ -1,0 +1,34 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "conditions": [
+    {
+      "type": "lya:recipe_enabled",
+      "addon": "bundled"
+    }
+  ],
+  "pattern": [
+    "IRI",
+    "RBR",
+    "IRI"
+  ],
+  "key": {
+    "B": {
+      "ore": "blockRedstone",
+      "type": "forge:ore_dict"
+    },
+    "I":
+    {
+      "ore": "ingotIron",
+      "type": "forge:ore_dict"
+    },
+    "R":
+    {
+      "ore": "dustRedstone",
+      "type": "forge:ore_dict"
+    }
+  },
+  "result": {
+    "item": "lya:node",
+    "data": 0
+  }
+}

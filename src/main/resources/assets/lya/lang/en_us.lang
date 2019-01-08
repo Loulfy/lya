@@ -5,6 +5,8 @@ tile.heater.name=Liquid Fueled Heater
 item.id_card.name=ID Card
 item.op_card.name=OP Card
 
+tile.node.name=Bundled Adaptor
+
 misc.lya:energy_stored=%d / %d FE
 
 tile.heater_main.name=Heater Controller

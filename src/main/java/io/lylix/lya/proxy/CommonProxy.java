@@ -10,6 +10,7 @@ import io.lylix.lya.tile.TileChunk;
 import io.lylix.lya.block.BlockBase;
 import io.lylix.lya.render.Renderer;
 import io.lylix.lya.chunkloader.ChunkManager;
+import io.lylix.lya.tile.TileNode;
 import net.minecraft.item.Item;
 import net.minecraft.block.Block;
 import net.minecraftforge.common.ForgeChunkManager;
@@ -42,6 +43,7 @@ public class CommonProxy
         {
             LYA.logger.info("Enable: chunkloader");
             LYA.instance.network.registerMessage(MessageChunkSync.class, MessageChunkSync.class, 0, Side.SERVER);
+            LYA.instance.network.registerMessage(MessageButtonSync.class, MessageButtonSync.class, 1, Side.SERVER);
             registerBlock(LYABlocks.CHUNK, "chunkloader");
             registerItem(LYAItems.ID_CARD, "id_card");
             registerItem(LYAItems.OP_CARD, "op_card");
@@ -57,6 +59,12 @@ public class CommonProxy
             registerMultiblock(LYABlocks.HEATER_FUEL);
             registerMultiblock(LYABlocks.HEATER_INFO);
         }
+
+        if(LYA.instance.config.isEnableBundle())
+        {
+            LYA.logger.info("Enable: bundle");
+            registerBlock(LYABlocks.NODE, "node");
+        }
     }
 
     public void init(FMLInitializationEvent e)
@@ -68,6 +76,7 @@ public class CommonProxy
         NetworkRegistry.INSTANCE.registerGuiHandler(LYA.instance, new GuiProxy());
 
         if(LYA.instance.config.isEnableChunky()) GameRegistry.registerTileEntity(TileChunk.class, "Chunkloader");
+        if(LYA.instance.config.isEnableBundle()) GameRegistry.registerTileEntity(TileNode.class, "node");
 
         hook.init();
     }

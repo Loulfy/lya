@@ -16,15 +16,21 @@ repositories {
 
     // JourneyMap API snapshots are here
     maven { url 'https://oss.sonatype.org/content/groups/public/' }
-    /*maven { url 'http://chickenbones.net/maven' }
-    maven { url 'https://maven2.tterrag.com/' }
+    /*maven { url 'https://maven2.tterrag.com/' }
     maven { url 'https://maven.tterrag.com/' }
     maven {
         name "dvs1"
         url "http://dvs1.progwml6.com/files/maven/"
     }*/
 
-    maven { url = "http://maven.cil.li/" }
+    maven { url = "http://dvs1.progwml6.com/files/maven" } // Jei
+    maven { url = "http://chickenbones.net/maven" } // ProjectRed
+    maven { url = "http://maven.cil.li/" } // OpenComputers
+    maven { url = "http://tehnut.info/maven" }
+    maven { url = "http://maven.tterrag.com" }
+    maven { url = "http://maven2.tterrag.com" }
+    maven { url = "http://dvs1.progwml6.com/files/maven" }
+    maven { url = "http://files.minecraftforge.net/maven" }
 
     // Redstone Flux
     maven {
@@ -100,6 +106,19 @@ dependencies {
     deobfCompile "cofh:RedstoneFlux:1.12-2.1.0.6:universal"
     deobfCompile "it.zerono.mods.zerocore:zerocore:1.12-0.1.2.3"
     compile "li.cil.oc:OpenComputers:MC1.12.2-1.7.+:api"
+
+    //deobfCompile "com.enderio.core:EnderCore:1.12.2-0.5.43"
+    deobfCompile "com.enderio:EnderIO:1.12.2-5.0.39"
+    //deobfCompile "mekanism:Mekanism:1.12.2:9.4.13.349"
+    compile "info.loenwind.autoconfig:AutoConfig:1.12.2-1.0.1"
+    compile "info.loenwind.autosave:AutoSave:1.12.2-1.0.9"
+
+    def JEI = { exclude group: "mezz.jei", module: "jei_1.12.2" }
+
+    runtime "codechicken:ChickenASM:1.12-1.0.2.9"
+    compile "mrtjp:ProjectRed:1.12.2-4.9.2.110:Base", JEI
+    compile "mrtjp:ProjectRed:1.12.2-4.9.2.110:integration", JEI
+    //runtime "mezz.jei:jei_1.12.2:4.8.5.147"
 }
 
 processResources {

@@ -13,4 +13,6 @@ public class LYABlocks
     public static final HeaterBlockPort HEATER_HEAT = new HeaterBlockPort(HeaterBlockType.Heat);
     public static final HeaterBlockPort HEATER_FUEL = new HeaterBlockPort(HeaterBlockType.Fuel);
     public static final HeaterBlockPort HEATER_INFO = new HeaterBlockPort(HeaterBlockType.Info);
+
+    public static final BlockNode NODE = new BlockNode();
 }

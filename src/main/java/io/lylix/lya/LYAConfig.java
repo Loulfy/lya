@@ -30,6 +30,8 @@ public class LYAConfig
 
     private final static String MK = "mekanism";
     private final static String ZC = "zerocore";
+    private final static String PR = "projectred-transmission";
+    private final static String EI = "enderioconduits";
 
     private Configuration cfg;
     private File dir;
@@ -109,8 +111,14 @@ public class LYAConfig
         return enableHeater && Loader.isModLoaded(MK) && Loader.isModLoaded(ZC);
     }
 
+    public boolean isEnableBundle()
+    {
+        return Loader.isModLoaded(PR) && Loader.isModLoaded(EI);
+    }
+
     public static boolean isEnable(String mod)
     {
+        if(mod.equals("bundled")) return LYA.instance.config.isEnableBundle();
         return Loader.isModLoaded(mod) || mod.equals("lya");
     }
 }

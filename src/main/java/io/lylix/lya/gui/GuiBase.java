@@ -3,6 +3,9 @@ package io.lylix.lya.gui;
 import io.lylix.lya.LYA;
 import io.lylix.lya.gui.widget.Widget;
 import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.inventory.Container;
 import net.minecraft.util.ResourceLocation;
 
@@ -15,6 +18,7 @@ public abstract class GuiBase extends GuiContainer
 {
     private static final Map<String, ResourceLocation> TEXTURE_CACHE = new HashMap<>();
 
+    private double uscale, vscale;
     private Set<Widget> widgetSet;
 
     public GuiBase(Container container)
@@ -92,5 +96,39 @@ public abstract class GuiBase extends GuiContainer
     public void addWidget(Widget widget)
     {
         widgetSet.add(widget);
+    }
+
+    public void bindTexture(String path, int usize, int vsize)
+    {
+        bindTexture(path);
+        uscale = 1.0 / usize;
+        vscale = 1.0 / vsize;
+    }
+
+    public void drawTextureRectUV(double x, double y, double w, double h, double u, double v, double us, double vs)
+    {
+        Tessellator tessellator = Tessellator.getInstance();
+        BufferBuilder bufferbuilder = tessellator.getBuffer();
+        bufferbuilder.begin(7, DefaultVertexFormats.POSITION_TEX);
+        bufferbuilder.pos(x, y+h, this.zLevel).tex(u, v+vs).endVertex();
+        bufferbuilder.pos(x+w, y+h, this.zLevel).tex(u+us, v+vs).endVertex();
+        bufferbuilder.pos(x+w, y, this.zLevel).tex(u+us, v).endVertex();
+        bufferbuilder.pos(x, y, this.zLevel).tex(u, v).endVertex();
+        tessellator.draw();
+    }
+
+    public void drawTexturedRect(double x, double y, double w, double h, double u, double v, double us, double vs)
+    {
+        drawTextureRectUV(x, y, w, h, u * uscale, v * vscale, us * uscale, vs * vscale);
+    }
+
+    public void drawTexturedRect(double x, double y, double w, double h)
+    {
+        drawTextureRectUV(x, y, w, h, 0.0, 0.0, 1.0, 1.0);
+    }
+
+    public void drawTexturedRect(double x, double y, double w, double h, double u, double v)
+    {
+        drawTexturedRect(x, y, w, h, u, v, w, h);
     }
 }
