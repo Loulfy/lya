@@ -13,17 +13,17 @@
   ],
   "key": {
     "B": {
-      "ore": "blockRedstone",
-      "type": "forge:ore_dict"
+      "item": "projectred-core:resource_item",
+      "data": 3
     },
     "I":
     {
-      "ore": "ingotIron",
+      "ore": "ingotSilver",
       "type": "forge:ore_dict"
     },
     "R":
     {
-      "ore": "dustRedstone",
+      "ore": "ingotRedAlloy",
       "type": "forge:ore_dict"
     }
   },
