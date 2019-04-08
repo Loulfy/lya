@@ -1,10 +1,11 @@
 package io.lylix.lya.chunkloader;
 
 import io.lylix.lya.LYA;
+import net.minecraft.command.ICommandSender;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
-import net.minecraft.world.border.IBorderListener;
 import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.common.ForgeChunkManager.LoadingCallback;
 import net.minecraftforge.common.ForgeChunkManager.Ticket;
@@ -14,6 +15,7 @@ import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import net.minecraftforge.event.world.BlockEvent;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Mod.EventBusSubscriber
 public class ChunkManager implements LoadingCallback
@@ -102,5 +104,40 @@ public class ChunkManager implements LoadingCallback
     public Set<IChunkLoader> getLoaders()
     {
         return tiles;
+    }
+
+    public void remap(ICommandSender sender)
+    {
+        for(IChunkLoader tile : tiles)
+        {
+            ChunkLoader cl = tile.getChunkLoader();
+
+            TileEntity ote = cl.getTileEntity();
+            World world = ote.getWorld();
+
+            if(world == null) sender.sendMessage(new TextComponentString(cl.stringifyPos()+" : Error no world in this tile"));
+            else
+            {
+                TileEntity nte = world.getTileEntity(ote.getPos());
+                if(nte == ote) sender.sendMessage(new TextComponentString(cl.stringifyPos()+" : Same tile, no issue"));
+                else
+                {
+                    sender.sendMessage(new TextComponentString(cl.stringifyPos()+" : REMAP"));
+
+                    tiles.remove(tile);
+
+                    if(nte instanceof IChunkLoader)
+                    {
+                        IChunkLoader ncl = IChunkLoader.class.cast(nte);
+
+                        ncl.getChunkLoader().refreshChunkSet();
+                        ncl.getChunkLoader().refreshPresence();
+                        ncl.getChunkLoader().setTicket(cl.getChunkTicket());
+
+                        tiles.add(ncl);
+                    }
+                }
+            }
+        }
     }
 }

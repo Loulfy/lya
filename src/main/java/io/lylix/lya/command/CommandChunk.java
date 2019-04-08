@@ -42,7 +42,7 @@ public class CommandChunk extends CommandBase
     @Override
     public String getUsage(ICommandSender sender)
     {
-        return "chunkloader [world, name] [dim, player]";
+        return "chunkloader [world, name, remap] [dim, player]";
     }
 
     @Override
@@ -71,6 +71,9 @@ public class CommandChunk extends CommandBase
                 /*case "result":
                     if(checkSize(args, "result")) byResult(args[1], checkPrint(args));
                     break;*/
+                case "remap":
+                    LYA.proxy.getChunkManager().remap(sender);
+                    break;
                 default:
                     sender.sendMessage(new TextComponentString(tag + TextFormatting.RED + "Error unknown command!"));
                     break;
@@ -81,7 +84,7 @@ public class CommandChunk extends CommandBase
     @Override
     public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos targetPos)
     {
-        if(args.length == 1) return Arrays.asList("name", "world"/*, "result"*/);
+        if(args.length == 1) return Arrays.asList("name", "world", "remap"/*, "result"*/);
         switch(args[0])
         {
             case "name":

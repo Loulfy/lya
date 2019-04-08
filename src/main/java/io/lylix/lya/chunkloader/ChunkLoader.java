@@ -36,6 +36,7 @@ public class ChunkLoader
 
     public void setTicket(Ticket t)
     {
+        LYA.logger.debug("set ticket");
         if(chunkTicket != t && chunkTicket != null && chunkTicket.world == tileEntity.getWorld())
         {
             for(ChunkPos chunk : chunkTicket.getChunkList())
@@ -51,6 +52,7 @@ public class ChunkLoader
             ForgeChunkManager.releaseTicket(chunkTicket);
         }
 
+        if(chunkTicket == null) LYA.logger.debug("the current ticket is null");
         chunkTicket = t;
     }
 
@@ -253,5 +255,15 @@ public class ChunkLoader
             return c.tileEntity.getPos().equals(tileEntity.getPos()) && c.tileEntity.getWorld().provider.getDimension() == tileEntity.getWorld().provider.getDimension();
         }
         return false;
+    }
+
+    public Ticket getChunkTicket()
+    {
+        return chunkTicket;
+    }
+
+    public TileEntity getTileEntity()
+    {
+        return tileEntity;
     }
 }
