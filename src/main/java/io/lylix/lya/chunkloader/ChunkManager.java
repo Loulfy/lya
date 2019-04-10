@@ -61,7 +61,7 @@ public class ChunkManager implements LoadingCallback
         TileEntity tileEntity = event.getWorld().getTileEntity(event.getPos());
         if(tileEntity instanceof IChunkLoader)
         {
-            LYA.logger.debug("PLACED CHUNKY");
+            LYA.logger.info("PLACED CHUNKY");
 
             IChunkLoader tile = IChunkLoader.class.cast(tileEntity);
             tile.getChunkLoader().create();
@@ -104,6 +104,35 @@ public class ChunkManager implements LoadingCallback
     public Set<IChunkLoader> getLoaders()
     {
         return tiles;
+    }
+
+    public void remap(TileEntity newTe)
+    {
+        if(newTe instanceof IChunkLoader)
+        {
+            for(IChunkLoader tile : tiles)
+            {
+                TileEntity oldTe = tile.getChunkLoader().getTileEntity();
+
+                if(oldTe.getWorld().provider.getDimension() == newTe.getWorld().provider.getDimension() && oldTe.getPos() == newTe.getPos())
+                {
+                    if(oldTe == newTe) LYA.logger.debug("No issue with ChunkLoader " + tile.getChunkLoader().printPos());
+                    else
+                    {
+                        LYA.logger.warn("Patch ChunkLoader " + tile.getChunkLoader().printPos());
+                        tiles.remove(tile);
+
+                        IChunkLoader cl = IChunkLoader.class.cast(newTe);
+                        cl.getChunkLoader().refreshChunkSet();
+                        cl.getChunkLoader().refreshPresence();
+                        cl.getChunkLoader().setTicket(tile.getChunkLoader().getChunkTicket());
+
+                        tiles.add(cl);
+                    }
+                    break;
+                }
+            }
+        }
     }
 
     public void remap(ICommandSender sender)

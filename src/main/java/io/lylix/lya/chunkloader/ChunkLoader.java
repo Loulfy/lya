@@ -201,6 +201,7 @@ public class ChunkLoader
 
     public void login(EntityPlayer player)
     {
+        LYA.proxy.getChunkManager().remap(tileEntity.getWorld().getTileEntity(tileEntity.getPos()));
         online.add(player.getGameProfile().getId());
         update();
     }
@@ -265,5 +266,10 @@ public class ChunkLoader
     public TileEntity getTileEntity()
     {
         return tileEntity;
+    }
+
+    public String printPos()
+    {
+        return "{world: " + tileEntity.getWorld().provider.getDimension() + ", block: " + stringifyPos() + "}";
     }
 }

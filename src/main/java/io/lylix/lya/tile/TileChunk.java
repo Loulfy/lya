@@ -295,6 +295,10 @@ public class TileChunk extends TileEntity implements ITickable, IChunkLoader
             renderer = LYA.proxy.getRenderer();
             renderer.show(this);
         }
+        else
+        {
+            LYA.proxy.getChunkManager().remap(this);
+        }
     }
 
     @Override
